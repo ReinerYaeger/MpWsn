@@ -8,6 +8,8 @@ from iot.pi_files.arduino_interface import get_serial_data
 app_name = "sms"
 
 
+
+
 def index(requests):
     get_serial_data()    
 
