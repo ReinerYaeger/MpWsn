@@ -1,14 +1,18 @@
 from django.shortcuts import render
 
 from sms.pi_server import start_server
+from  threading import Thread
+
 server_running = bool
 
 # Create your views here.
 if not server_running:
-    start_server()
+    thread = Thread(target=start_server())
+    thread.start()
     server_running = True
-def index(requests):
 
+
+def index(requests):
     context = {
 
     }
