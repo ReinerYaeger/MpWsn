@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from sms.pi_server import start_server
+from pi_server import start_server
 from  threading import Thread
 
 server_running = bool
