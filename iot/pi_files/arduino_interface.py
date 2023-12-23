@@ -46,7 +46,7 @@ def get_serial_data(sleep_sec=2):
                                 analog_dict[prefix[:-1]] = data_dict
 
             process_data(analog_dict)
-            print(analog_dict)
+            logging.info(analog_dict)
             sleep(sleep_sec)
 
     except KeyboardInterrupt as e:

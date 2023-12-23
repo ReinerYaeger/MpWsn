@@ -8,6 +8,7 @@ logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', filename
                     level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+
 try:
     connection = connect(
         host="localhost",
@@ -52,7 +53,7 @@ async def server_async():
 def server():
     HOST = '0.0.0.0'  # Listen on all available interfaces
     PORT = 1234
-    #connection = define_connection()
+    # connection = define_connection()
 
     try:
 
@@ -60,7 +61,7 @@ def server():
             s.bind((HOST, PORT))
             s.listen()
 
-            logging.info(f"Server listening on port {PORT}...")
+            logging.debug(f"Server listening on port {PORT}...")
 
             while True:
                 conn, addr = s.accept()
@@ -68,7 +69,7 @@ def server():
                 data = conn.recv(4096)
                 rec_data = pickle.loads(data)
                 logging.info(f"Data by {rec_data}")
-                upload_data(connection, rec_data)
+                upload_data(rec_data)
 
     except socket.error as e:
         logging.error(f"{e}")
@@ -82,7 +83,7 @@ def upload_data(data):
         sensor_data = data[f'{sensor_name}']['soil_moisture_data']
         sensor_date_time = data[f'{sensor_name}']['timestamp']
 
-        logging.debug(f"Processing sensor: {sensor_name}")  # Log for debugging
+        logging.debug(f"Processing sensor: {sensor_name}")
         logging.debug(f"Sensor data: {sensor_data}")
         logging.debug(f"Sensor date/time: {sensor_date_time}")
 
@@ -93,14 +94,14 @@ def upload_data(data):
                 cursor.execute(sql, values)
 
             connection.commit()  # Commit after each successful insertion
-            logging.info("Data inserted for sensor: %s %s", sensor_name, sensor_data)
+            logging.debug("Data inserted for sensor: %s %s", sensor_name, sensor_data)
         except Exception as err:
             logging.error("Unexpected error for sensor %s: %s", sensor_name, err)
 
 
 def main():
     asyncio.run(server_async())
-    #server()
+    # server()
 
 
 if __name__ == "__main__":
