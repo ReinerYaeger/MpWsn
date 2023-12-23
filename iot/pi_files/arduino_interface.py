@@ -1,6 +1,7 @@
 # Code for the Raspberry pi
+import asyncio
 import base64
-import json
+import pickle
 from time import sleep
 import serial
 import traceback
@@ -16,20 +17,17 @@ logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', filename
 logger = logging.getLogger(__name__)
 
 
-def get_serial_data():
+def get_serial_data(sleep_sec=2):
     try:
-        ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
+        ser = serial.Serial('COM7', 9600, timeout=1)
         ser.flushInput()
         analog_dict = {
             'A0': {'soil_moisture_data': [], 'timestamp': []},
             'A1': {'soil_moisture_data': [], 'timestamp': []},
             'A2': {'soil_moisture_data': [], 'timestamp': []},
-            'A3': {'soil_moisture_data': [], 'timestamp': []},
-            'A4': {'soil_moisture_data': [], 'timestamp': []},
         }
 
         while True:
-
             ser_bytes = ser.readline()
             decoded_string = ser_bytes.decode("utf-8").strip()
 
@@ -44,10 +42,12 @@ def get_serial_data():
                                 'soil_moisture_data': data_value,
                                 'timestamp': timestamp
                             }
-                            analog_dict[prefix[:-1]] = data_dict
+                            if data_value:
+                                analog_dict[prefix[:-1]] = data_dict
+
             process_data(analog_dict)
             print(analog_dict)
-            sleep(20)
+            sleep(sleep_sec)
 
     except KeyboardInterrupt as e:
         logging.error(f"Keyboard Interrupt {e}")
@@ -76,23 +76,36 @@ def get_serial_data():
 
 def process_data(analog_dict):
     try:
-        send_data(encrypt_data(analog_dict))
-
+        encoded_data = pickle.dumps(analog_dict)
+        # send_data(encoded_data)
+        asyncio.run(send_data_async(encoded_data))
+        logging.info(f"Data contents {analog_dict} ")
     except Exception as e:
         logging.error(e)
 
 
 def send_data(data):
-    HOST = "127.0.0.1"
-    PORT = 1234
+    host = "127.0.0.1"
+    port = 1234
 
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.connect((HOST, PORT))  # Establish connection
-            s.sendall(data.encode())  # Encode the data to bytes and send
+            s.connect((host, port))
+            s.sendall(data)
     except socket.error as e:
         logger.error(f"Socket Error: {e}")
     return
+
+
+async def send_data_async(data):
+    reader, writer = await asyncio.open_connection(
+        '127.0.0.1', 1234)
+
+    writer.write(data)
+    await writer.drain()
+    logging.info(f"Data Sent {data}")
+    writer.close()
+    await writer.wait_closed()
 
 
 def encrypt_data(token):

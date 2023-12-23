@@ -1,4 +1,5 @@
-venv
+venv/
 mp_wn.log
 db.sqlite3
 iot/pi_files/mp_wn.log
+/venv/
