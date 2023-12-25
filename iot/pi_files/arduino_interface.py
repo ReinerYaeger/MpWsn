@@ -17,7 +17,7 @@ logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', filename
 logger = logging.getLogger(__name__)
 
 
-def get_serial_data(sleep_sec=2):
+def get_serial_data(sleep_sec=3):
     try:
         ser = serial.Serial('COM7', 9600, timeout=1)
         ser.flushInput()
@@ -46,7 +46,9 @@ def get_serial_data(sleep_sec=2):
                                 analog_dict[prefix[:-1]] = data_dict
 
             process_data(analog_dict)
+            print(analog_dict)
             logging.info(analog_dict)
+
             sleep(sleep_sec)
 
     except KeyboardInterrupt as e:
@@ -121,3 +123,11 @@ def decrypt_data(en_byte):
     f = Fernet(os.getenv("KEY"))
     decrypted_token = f.decrypt(en_byte)
     return base64.b64decode(decrypted_token.decode())
+
+
+def main():
+    get_serial_data()
+
+
+if __name__ == '__main__':
+    main()

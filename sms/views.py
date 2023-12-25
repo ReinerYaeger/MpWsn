@@ -12,8 +12,8 @@ def index(requests):
         t2 = Thread(target=arduino_interface.get_serial_data())
         context = {
         }
-
-        t2.start()
+        if not t2.is_alive():
+            t2.start()
     except Exception as e:
         print("Error starting threads:", e)
 

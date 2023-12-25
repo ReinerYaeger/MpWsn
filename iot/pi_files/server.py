@@ -94,6 +94,7 @@ def upload_data(data):
                 cursor.execute(sql, values)
 
             connection.commit()  # Commit after each successful insertion
+            print("Data inserted for sensor: %s %s", sensor_name, sensor_data)
             logging.debug("Data inserted for sensor: %s %s", sensor_name, sensor_data)
         except Exception as err:
             logging.error("Unexpected error for sensor %s: %s", sensor_name, err)

@@ -1,76 +1,95 @@
+import threading
+import time
 import logging
-from mysql.connector import connect, Error
-import asyncio
+from sqlalchemy import create_engine, select, desc, Column, String, Float, DateTime
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
+from collections import deque
 
+Base = declarative_base()
+logger = logging.getLogger(__name__)
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', filename='mp_wn.log', encoding='utf-8',
                     level=logging.DEBUG)
-logger = logging.getLogger(__name__)
 
-try:
-    connection = connect(
-        host="localhost",
-        user="root",
-        password="",
-        database="mp_wsn"
 
+class SoilSensorData(Base):
+    __tablename__ = 'soil_sensor_data'
+
+    sensor_name = Column(String)
+    sensor_data = Column(Float)
+    sensor_date_time = Column(DateTime, primary_key=True)
+
+
+# Assuming an 'engine' object exists for the database connection
+engine = create_engine('mysql+mysqlconnector://root:@localhost/mp_wsn', pool_recycle=3600)
+Session = sessionmaker(bind=engine)
+session = Session()
+
+
+def initial_retrieval(analog_dict, session):
+    query = (
+        select(SoilSensorData.sensor_name, SoilSensorData.sensor_data, SoilSensorData.sensor_date_time)
+        .filter(SoilSensorData.sensor_name.in_(['A0', 'A1', 'A2']))
+        .order_by(desc(SoilSensorData.sensor_date_time))
+        .limit(5)
     )
-    logger.info("Connected to the database")
-    print("Connected to the database")
 
-except Error as e:
-    logger.error("Error connecting to the database: %s", e)
-except Exception as e:
-    logger.error("Database connection error: %s", str(e))
+    query_result = session.execute(query)
 
-data_dict = {
-    'A0': [],
-    'A1': [],
-    'A2': [],
-}
-
-
-async def algoriddim():
-    analog_dict = {
-        'A0': {'soil_moisture_data': [], 'timestamp': []},
-        'A1': {'soil_moisture_data': [], 'timestamp': []},
-        'A2': {'soil_moisture_data': [], 'timestamp': []},
-    }
-    while True:
-        await asyncio.sleep(1)
-        if len(analog_dict['A0']) < 200:
-            connection.cursor().execute(f"""SELECT * FROM soil_sensor_data ORDER BY sensor_data_time DESC LIMIT 200""")
-            query_result = connection.cursor().fetchall()
-            for row in query_result:
-                sensor_name = row[0]
-                sensor_data = row[1]
-                sensor_data_time = row[2]
-
-                analog_dict[sensor_name]['soil_moisture_data'].append(sensor_data)
-                analog_dict[sensor_name]['timestamp'].append(sensor_data_time)
-
-        if len(analog_dict['A0']) == 200:
-            print(analog_dict['A0']['soil_moisture_data'].index(len(analog_dict['A0']['soil_moisture_data'])))
-            connection.cursor().execute(f"""SELECT * FROM soil_sensor_data ORDER BY sensor_data_time DESC LIMIT 1""")
-
-
-def anova_test():
-    connection.cursor().execute(
-        f"""SELECT sensor_name,sensor_data FROM soil_sensor_data ORDER BY sensor_name DESC LIMIT 150""")
-
-    for row in connection.cursor().fetchall():
+    for row in query_result:
         sensor_name = row[0]
         sensor_data = row[1]
+        sensor_date_time = row[2].strftime('%Y-%m-%d %H:%M:%S')
 
-        data_dict[sensor_name].append(sensor_data)
-        print(data_dict)
+        analog_dict[sensor_name]['soil_moisture_data'].append(sensor_data)
+        analog_dict[sensor_name]['timestamp'].append(sensor_date_time)
 
-    sensor_data = connection.cursor().fetchall()
 
-    return
+def continuous_update(analog_dict, session):
+    query = (
+        select(SoilSensorData.sensor_name, SoilSensorData.sensor_data, SoilSensorData.sensor_date_time)
+        .filter(SoilSensorData.sensor_name.in_(['A0', 'A1', 'A2']))
+        .order_by(desc(SoilSensorData.sensor_date_time))
+        .limit(1)
+    )
+
+    query_result = session.execute(query)
+
+    for row in query_result:
+        sensor_name = row[0]
+        sensor_data = row[1]
+        sensor_date_time = row[2].strftime('%Y-%m-%d %H:%M:%S')
+
+        if len(analog_dict[sensor_name]['soil_moisture_data']) >= 5:
+            analog_dict[sensor_name]['soil_moisture_data'].popleft()
+            analog_dict[sensor_name]['timestamp'].popleft()
+        analog_dict[sensor_name]['soil_moisture_data'].append(sensor_data)
+        analog_dict[sensor_name]['timestamp'].append(sensor_date_time)
+
+
+def continuous_data_retrieval():
+    analog_dict = {
+        'A0': {'soil_moisture_data': deque(), 'timestamp': deque()},
+        'A1': {'soil_moisture_data': deque(), 'timestamp': deque()},
+        'A2': {'soil_moisture_data': deque(), 'timestamp': deque()},
+    }
+
+    while True:
+        session = Session()
+        if len(analog_dict['A0']['soil_moisture_data']) < 5:
+            initial_retrieval(analog_dict, session)
+
+        if len(analog_dict['A0']['soil_moisture_data']) == 5:
+            continuous_update(analog_dict, session)
+
+        print(f'A0  {analog_dict["A0"]["soil_moisture_data"]} {analog_dict["A0"]["timestamp"]}')
+        print(f'A1  {analog_dict["A1"]["soil_moisture_data"]} {analog_dict["A1"]["timestamp"]}')
+        print(f'A2  {analog_dict["A2"]["soil_moisture_data"]} {analog_dict["A2"]["timestamp"]}')
+        time.sleep(3)
 
 
 def main():
-    anova_test()
+    threading.Thread(target=continuous_data_retrieval).start()
     return
 
 
