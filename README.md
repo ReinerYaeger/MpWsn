@@ -1,47 +1,58 @@
-
 # Installation
 
-Note is application was developed using the XAMP stack
+This application was developed using the XAMPP stack.
 
-There is a sql file included in the base directory you can simply import it in PHP myadmin this is just so you can have the data include you do not have the hardware.
+### Prerequisites
 
+Ensure you have the following installed:
 
-Clone the project is desired directory
-`
-git clone 
-`
+- **XAMPP**: Set up XAMPP on your system to manage Apache, MySQL, and PHP.
+- **Python**: Ensure Python is installed on your machine.
 
-Create a virtual env
-`
-python -m venv venv
-`
+### Database Setup
 
-Install the requirements
-`
+1. **Import SQL File**: Locate the SQL file included in the base directory and import it into PHPMyAdmin. This file contains necessary data for the application, excluding hardware-specific details.
+
+### Setting Up the Application
+
+Follow these steps to set up the application:
+
+1. **Clone the Project**:
+    ```
+    git clone https://github.com/ReinerYaeger/MpWsn
+    ```
+    Clone the project into your desired directory.
+
+2. **Create a Virtual Environment**:
+    ```
+    python -m venv venv
+    ```
+    This will create a virtual environment for isolating the project's dependencies.
+
+3. **Install Requirements**:
+    ```
     pip install -r requirements.txt
-`
+    ```
+    This command will install all the required Python packages specified in the `requirements.txt` file.
 
-run the django web application
-`
- python .\manage.py runserver
-`
+### Running the Application
 
-If you do have the hardware the files for the Arduino and the Raspberry Pi 4 is in this directory  
-`
-/iot/pi_files
-`
+After completing the installation steps, you're ready to run the application. Make sure XAMPP is running to support the application's database functionalities.
 
-To run the server simply run the server.py file in the /iot/pi_files directory 
-`
-python /iot/pi_files/server.py
-`
+### Hardware Files
 
-To perform the analytics run the analyzer.py file in the /iot/pi_files directory 
-`
-python /iot/pi_files/analyzer.py
-`
+If you possess the required hardware, find the necessary files for the Arduino and Raspberry Pi 4 in this directory:
+
+### Running the Server
+
+To run the server, execute the `server.py` file located in the `/iot/pi_files` directory using the following command:
 
 
+### Performing Analytics
+
+For performing analytics, run the `analyzer.py` file in the `/iot/pi_files` directory using the command:
 
 
+### Running the Application
 
+After completing the installation steps, you're ready to run the application. Make sure XAMPP is running to support the application's database functionalities.
