@@ -8,7 +8,7 @@ import traceback
 from datetime import datetime
 import logging
 import socket
-from cryptography.fernet import Fernet
+#from cryptography.fernet import Fernet
 import os
 from dotenv import load_dotenv
 
@@ -110,19 +110,19 @@ async def send_data_async(data):
     await writer.wait_closed()
 
 
-def encrypt_data(token):
-    load_dotenv()
-    f = Fernet(os.getenv("KEY"))
-    token = base64.b64encode(str(token).encode('utf-8')).decode('utf-8')
-    encrypted_token = f.encrypt(token.encode())
-    return encrypted_token
-
-
-def decrypt_data(en_byte):
-    load_dotenv()
-    f = Fernet(os.getenv("KEY"))
-    decrypted_token = f.decrypt(en_byte)
-    return base64.b64decode(decrypted_token.decode())
+# def encrypt_data(token):
+#     load_dotenv()
+#     f = Fernet(os.getenv("KEY"))
+#     token = base64.b64encode(str(token).encode('utf-8')).decode('utf-8')
+#     encrypted_token = f.encrypt(token.encode())
+#     return encrypted_token
+#
+#
+# def decrypt_data(en_byte):
+#     load_dotenv()
+#     f = Fernet(os.getenv("KEY"))
+#     decrypted_token = f.decrypt(en_byte)
+#     return base64.b64decode(decrypted_token.decode())
 
 
 def main():
