@@ -8,14 +8,6 @@ from threading import Thread
 
 def index(requests):
 
-    try:
-        t2 = Thread(target=arduino_interface.get_serial_data())
-        context = {
-        }
-        if not t2.is_alive():
-            t2.start()
-    except Exception as e:
-        print("Error starting threads:", e)
-
+    context = {}
 
     return render(requests, 'sms/index.html', context)

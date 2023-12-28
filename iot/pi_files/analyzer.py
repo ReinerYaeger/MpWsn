@@ -19,8 +19,6 @@ class SoilSensorData(Base):
     sensor_data = Column(Float)
     sensor_date_time = Column(DateTime, primary_key=True)
 
-
-# Assuming an 'engine' object exists for the database connection
 engine = create_engine('mysql+mysqlconnector://root:@localhost/mp_wsn', pool_recycle=3600)
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -73,6 +71,7 @@ def continuous_data_retrieval():
         'A1': {'soil_moisture_data': deque(), 'timestamp': deque()},
         'A2': {'soil_moisture_data': deque(), 'timestamp': deque()},
     }
+    
 
     while True:
         session = Session()
