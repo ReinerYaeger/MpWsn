@@ -38,10 +38,14 @@ Follow these steps to set up the application:
 ### Running the Application
 
 After completing the installation steps, you're ready to run the application. Make sure XAMPP is running to support the application's database functionalities.
+```
+python ./manage runserver
+```
 
 ### Hardware Files
 
 If you possess the required hardware, find the necessary files for the Arduino and Raspberry Pi 4 in this directory:
+``/iot/pi_files``
 
 ### Running the Server
 
@@ -53,6 +57,4 @@ To run the server, execute the `server.py` file located in the `/iot/pi_files` d
 For performing analytics, run the `analyzer.py` file in the `/iot/pi_files` directory using the command:
 
 
-### Running the Application
 
-After completing the installation steps, you're ready to run the application. Make sure XAMPP is running to support the application's database functionalities.
