@@ -19,12 +19,13 @@ class SoilSensorData(Base):
     sensor_data = Column(Float)
     sensor_date_time = Column(DateTime, primary_key=True)
 
+
 engine = create_engine('mysql+mysqlconnector://root:@localhost/mp_wsn', pool_recycle=3600)
 Session = sessionmaker(bind=engine)
 session = Session()
 
 
-def initial_retrieval(analog_dict, session):
+def initial_retrieval(analog_dict):
     query = (
         select(SoilSensorData.sensor_name, SoilSensorData.sensor_data, SoilSensorData.sensor_date_time)
         .filter(SoilSensorData.sensor_name.in_(['A0', 'A1', 'A2']))
@@ -43,7 +44,7 @@ def initial_retrieval(analog_dict, session):
         analog_dict[sensor_name]['timestamp'].append(sensor_date_time)
 
 
-def continuous_update(analog_dict, session):
+def continuous_update(analog_dict):
     query = (
         select(SoilSensorData.sensor_name, SoilSensorData.sensor_data, SoilSensorData.sensor_date_time)
         .filter(SoilSensorData.sensor_name.in_(['A0', 'A1', 'A2']))
@@ -65,25 +66,16 @@ def continuous_update(analog_dict, session):
         analog_dict[sensor_name]['timestamp'].append(sensor_date_time)
 
 
-def continuous_data_retrieval():
-    analog_dict = {
-        'A0': {'soil_moisture_data': deque(), 'timestamp': deque()},
-        'A1': {'soil_moisture_data': deque(), 'timestamp': deque()},
-        'A2': {'soil_moisture_data': deque(), 'timestamp': deque()},
-    }
-    
+def continuous_data_retrieval(analog_dict,data_queue):
 
     while True:
-        session = Session()
         if len(analog_dict['A0']['soil_moisture_data']) < 5:
-            initial_retrieval(analog_dict, session)
+            initial_retrieval(analog_dict)
 
         if len(analog_dict['A0']['soil_moisture_data']) == 5:
-            continuous_update(analog_dict, session)
+            continuous_update(analog_dict)
 
-        print(f'A0  {analog_dict["A0"]["soil_moisture_data"]} {analog_dict["A0"]["timestamp"]}')
-        print(f'A1  {analog_dict["A1"]["soil_moisture_data"]} {analog_dict["A1"]["timestamp"]}')
-        print(f'A2  {analog_dict["A2"]["soil_moisture_data"]} {analog_dict["A2"]["timestamp"]}')
+        data_queue.put(analog_dict)
         time.sleep(3)
 
 

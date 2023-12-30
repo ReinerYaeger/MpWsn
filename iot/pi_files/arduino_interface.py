@@ -34,7 +34,7 @@ def get_serial_data(sleep_sec=3):
             if decoded_string and decoded_string != "":
                 output_list = decoded_string.split("\t")
                 for data_point in output_list:
-                    for prefix in ['A0:', 'A1:', 'A2:', 'A3:', 'A4:']:
+                    for prefix in ['A0:', 'A1:', 'A2:',]:
                         if prefix in data_point:
                             data_value = data_point.split(":")[1].strip()
                             timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')

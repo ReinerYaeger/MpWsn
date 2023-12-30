@@ -1,10 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+  <head>
+    <title>Bokeh Scatter Plots</title>
+   <link rel="stylesheet" href="http://cdn.pydata.org/bokeh/release/bokeh-1.0.4.min.css">
 
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-3.3.2.min.js"></script>
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-3.3.2.min.js"></script>
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-3.3.2.min.js"></script>
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-api-3.3.2.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script>
+          function updateGraph() {
+    $.ajax({
+        url: '/get_updated_data/',  // URL to fetch updated data
+        method: 'GET',
+        success: function(data) {
+            // Update the plot with the fetched data
+            // 'data' should contain 'x' and 'y' arrays
+            // Example code to update the plot (replace with your Bokeh-specific code)
+            // Update 'x' and 'y' with the received data
+            plot.data_source.data['x'] = data.x;
+            plot.data_source.data['y'] = data.y;
+
+            // Trigger the plot update
+            plot.trigger('change');
+        },
+        complete: function() {
+            // Schedule the next update after a delay (e.g., 5 seconds)
+            setTimeout(updateGraph, 5000);
+        }
+    });
+}
+
+// Call the function to start updating the graph
+updateGraph();
+
+      </script>
+
+ </head>
+ <body>
+
+     {{ div | safe }}
+
+    {{ script | safe }}
 </body>
+
+
 </html>
