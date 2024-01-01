@@ -8,7 +8,6 @@ urlpatterns = [
     path('soil_moisture_data/', continuous_data_retrieval_api, name='continuous_retrieval'),
     path('get_updated_data/', get_updated_data, name='get_updated_data'),
     path('search/', search_view, name='search'),
-    path('page1/', page1, name='page1'),
     path('charts/', charts, name='charts'),
     path('myview/', page1, name="page1"),
     path('login/', CustomLoginView.as_view(success_url='sms/page1/'), name='login'),
