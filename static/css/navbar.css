@@ -1,0 +1,24 @@
+ul {
+   list-style-type: none;
+  margin: 0;
+  padding: 0;
+  background-color: #7f886e;
+}
+
+li {
+  margin-right: 10px;
+  display: inline-block;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+a{
+  display: inline-block;
+  color: Black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+li a:hover, .dropdown:hover {
+  color: red;
+}

@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Analysis and Representation</title>
+
+    <!-- External CSS for additional styling -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    <!-- Bokeh and other scripts -->
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-3.3.2.min.js"></script>
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-3.3.2.min.js"></script>
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-3.3.2.min.js"></script>
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-api-3.3.2.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function updateGraph() {
+            $.ajax({
+                url: '/get_updated_data/',
+                method: 'GET',
+                success: function(data) {
+                    // Update the plot with the fetched data
+                    plot.data_source.data['x'] = data.x;
+                    plot.data_source.data['y'] = data.y;
+
+                    plot.trigger('change');
+                },
+                complete: function() {
+                    // Schedule the next update after a delay (e.g., 5 seconds)
+                    setTimeout(updateGraph, 5000);
+                }
+            });
+        }
+        updateGraph();
+    </script>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        {% include 'sms/navi.html' %}
+    </header>
+
+    <!-- Main Content Section -->
+    <main>
+
+            <h2>Live Data Analysis</h2>
+
+
+<!-- Bokeh Plot Components -->
+    {{ div | safe }}
+    {{ script | safe }}
+        <!-- Additional Information or Instructions -->
+
+
+            <p>Explore the live data analysis presented in the interactive chart above.</p>
+            <p>Data is updated every 5 seconds to provide real-time insights.</p>
+<br>
+            <h2>Live Data Analysis2</h2>
+
+            <p>Explore the live data analysis presented in the interactive chart above.</p>
+            <p>Data is updated every 5 seconds to provide real-time insights.</p>
+
+
+    </main>
+
+
+</body>
+</html>
