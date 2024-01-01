@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Major Project</title>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <style>
+        /* Hide the second form by default */
+        .hidden-form {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <div class="signup-form">
+        {% block content %}
+            <form id="initial-form" method="post" action="{% url 'signup' %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="button" onclick="toggleForms()">Sign Up</button>
+            </form>
+            <!-- Sign-up form -->
+            <form id="second-form" class="hidden-form" action="{% url 'signup' %}" method="post">
+                {% csrf_token %} <!-- Add CSRF token -->
+                <label for="new_username">New Username:</label>
+                <input type="text" id="new_username" name="new_username">
+                <label for="new_password">New Password:</label>
+                <input type="password" id="new_password" name="new_password">
+                <button type="submit">Sign Up</button>
+            </form>
+        {% endblock %}
+    </div>
+
+
+</div>
+
+{{ div | safe }}
+{{ script | safe }}
+
+<script>
+
+
+    function showSignupForm() {
+        document.getElementById("login-form").style.display = "none";
+        document.getElementById("signup-form").style.display = "block";
+    }
+
+    function toggleForms() {
+        // Toggle the visibility of the forms
+        document.getElementById("initial-form").style.display = "none";
+        document.getElementById("second-form").style.display = "block";
+    }
+</script>
+
+</body>
+</html>

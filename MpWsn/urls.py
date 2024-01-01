@@ -22,8 +22,10 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('sms.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
     # path('/profiles', include('profiles.urls')),
     # path('/pi_talk', include('pi_talk.urls')),
+
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

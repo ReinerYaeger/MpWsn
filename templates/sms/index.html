@@ -1,49 +1,53 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Bokeh Scatter Plots</title>
-   <link rel="stylesheet" href="http://cdn.pydata.org/bokeh/release/bokeh-1.0.4.min.css">
+<head>
+    <title>Major Project</title>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+</head>
+<body>
+ <div class="welcome-message">
+        <h1>Welcome to our Soil Analysis Platform!</h1>
+        <p>
+            Explore the changes in soil characteristics as the sensor readings stabilize for various soil types.
+            This analysis will involve measuring constant sensor values for each soil type, and the gathered data
+            will undergo comparison and analysis using the ANOVA technique.
+        </p>
+        <p>
+            Our platform leverages Python 3 to generate insightful box plots, visually displaying the results
+            for easy interpretation. Join us in unraveling the secrets beneath the surface of different soil types!
+        </p>
+    </div>
 
-    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-3.3.2.min.js"></script>
-    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-3.3.2.min.js"></script>
-    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-3.3.2.min.js"></script>
-    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-api-3.3.2.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-      <script>
-          function updateGraph() {
-    $.ajax({
-        url: '/get_updated_data/',  // URL to fetch updated data
-        method: 'GET',
-        success: function(data) {
-            // Update the plot with the fetched data
-            // 'data' should contain 'x' and 'y' arrays
-            // Example code to update the plot (replace with your Bokeh-specific code)
-            // Update 'x' and 'y' with the received data
-            plot.data_source.data['x'] = data.x;
-            plot.data_source.data['y'] = data.y;
 
-            // Trigger the plot update
-            plot.trigger('change');
-        },
-        complete: function() {
-            // Schedule the next update after a delay (e.g., 5 seconds)
-            setTimeout(updateGraph, 5000);
-        }
-    });
-}
+        <div class="login-form" id="login-form">
+    <!-- Login form -->
+    <form method="post" action="{% url 'login' %}" >
+        {% csrf_token %}
+        <label for="login_username">Username:</label>
+        <input type="text" id="login_username" name="login_username">
+        <label for="login_password">Password:</label>
+        <input type="password" id="login_password" name="login_password">
+        <!--<button type="button" onclick="showLoginForm()">Login</button>-->
+        <button type="submit">Login</button>
+    </form>
+</div>
 
-// Call the function to start updating the graph
-updateGraph();
 
-      </script>
-
- </head>
- <body>
-
-     {{ div | safe }}
+    {{ div | safe }}
 
     {{ script | safe }}
+
+    <script>
+        function showLoginForm() {
+            document.querySelector(".signup-form").style.display = "none";
+            document.querySelector(".login-form").style.display = "block";
+        }
+
+        function showSignupForm() {
+            document.querySelector(".login-form").style.display = "none";
+            document.querySelector(".signup-form").style.display = "block";
+        }
+    </script>
 </body>
-
-
 </html>
