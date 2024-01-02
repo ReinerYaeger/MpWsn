@@ -13,14 +13,13 @@ This application facilitates the collection of soil moisture data from sensors c
 
 # Installation
 
-This application was developed using the XAMPP stack.
-
 ### Prerequisites
 
 Ensure you have the following installed:
 
-- **XAMPP**: Set up XAMPP on your system to manage Apache, MySQL, and PHP.
-- **Python**: Ensure Python is installed on your machine.
+- **XAMPP**
+- **Python**
+- **Git**
 
 ### Database Setup
 
