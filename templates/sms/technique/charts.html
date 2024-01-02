@@ -34,6 +34,17 @@
         }
         updateGraph();
     </script>
+
+    <script>
+        type="text/javascript"
+        let url = `ws://${window.location.host}/ws/socket-server/`
+        const dataSocket = new WebSocket(url)
+
+        dataSocket.onmessage = function(e){
+            let data = JSON.parse(e.data)
+            console.log('Data:',data)
+        }
+    </script>
 </head>
 <body>
     <!-- Header Section -->
