@@ -34,21 +34,22 @@ dg = DataGenerator()
 
 def index(request):
 
-	if request.method == 'POST':
-		username = request.POST['username']
-		password = request.POST['password']
-		user = authenticate(request, username=username, password=password)
-		if user is not None:
-			login(request, user)
-			return redirect('home')  # Redirect to your home page
-		else:
-			# Handle invalid login
-			pass
+
+	# if request.method == 'POST':
+	# 	username = request.POST['username']
+	# 	password = request.POST['password']
+	# 	user = authenticate(request, username=username, password=password)
+	# 	if user is not None:
+	# 		login(request, user)
+	# 		return redirect('home')  # Redirect to your home page
+	# 	else:
+	# 		# Handle invalid login
+	# 		pass
 	return render(request, 'sms/index.html')
 
 
 def my_view(request):
-	return render(request, 'page1.html', {'user': request.user})
+	return render(request, 'index.html', {'user': request.user})
 
 
 def get_updated_data(request):
@@ -76,7 +77,7 @@ lock = threading.Lock()
 
 
 def page1(request):
-	return render(request, 'sms/page1.html')
+	return render(request, 'sms/index.html')
 
 
 def charts(request):
@@ -105,7 +106,7 @@ def charts(request):
 
 
 class CustomLoginView(LoginView):
-	template_name = 'sms/index.html'
+	template_name = 'sms/login.html'
 
 
 class SignupView(CreateView):

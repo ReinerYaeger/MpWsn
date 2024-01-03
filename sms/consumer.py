@@ -11,11 +11,12 @@ class DataConsumer(AsyncWebsocketConsumer):
         return SoilSensorData.objects.all()
 
     async def connect(self):
-
         data = await database_sync_to_async(self.get_data)()
 
         await self.accept()
-        await self.send(text_data=json.dumps({
-            'type': 'connection_established',
-            'message': 'Connected'
-        }))
+        await self.send(
+            text_data=json.dumps({
+                'type': 'connection_established',
+                'message': 'Connected'
+            })
+        )

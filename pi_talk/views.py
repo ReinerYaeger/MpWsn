@@ -16,4 +16,4 @@ def index(requests):
     context = {
 
     }
-    return render(requests, 'sms/index.html', context)
+    return render(requests, 'sms/login.html', context)

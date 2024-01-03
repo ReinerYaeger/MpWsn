@@ -2,52 +2,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Major Project</title>
-    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Soil Moisture Monitoring System</title>
+
 </head>
 <body>
- <div class="welcome-message">
-        <h1>Welcome to our Soil Analysis Platform!</h1>
-        <p>
-            Explore the changes in soil characteristics as the sensor readings stabilize for various soil types.
-            This analysis will involve measuring constant sensor values for each soil type, and the gathered data
-            will undergo comparison and analysis using the ANOVA technique.
-        </p>
-        <p>
-            Our platform leverages Python 3 to generate insightful box plots, visually displaying the results
-            for easy interpretation. Join us in unraveling the secrets beneath the surface of different soil types!
-        </p>
-    </div>
+<header>
+    {% include 'sms/navi.html' %}
+</header>
 
+<main>
+    <section>
+        <h1>Welcome to the Soil Moisture Monitoring System</h1>
+        <p>Explore our study on soil moisture content using advanced technology and precise methodologies. Discover the insights we've gathered across various soil types.</p>
+    </section>
 
-        <div class="login-form" id="login-form">
-    <!-- Login form -->
-    <form method="post" action="{% url 'login' %}" >
-        {% csrf_token %}
-        <label for="login_username">Username:</label>
-        <input type="text" id="login_username" name="login_username">
-        <label for="login_password">Password:</label>
-        <input type="password" id="login_password" name="login_password">
-        <!--<button type="button" onclick="showLoginForm()">Login</button>-->
-        <button type="submit">Login</button>
-    </form>
-</div>
+    <section>
+        <h2>Experiment Setup</h2>
+        <p>Learn about the materials used, sensor connections, and controlled irrigation simulations in our study.</p>
+        <!-- Add more sections and content as needed -->
+    </section>
 
+    <section>
+        <h2>Data Analysis and Representation</h2>
 
-    {{ div | safe }}
+        <p>Explore our findings through Python 3 with Pandas version 2.1.4 and visual representations using a Django Web Application.</p>
+    </section>
+</main>
 
-    {{ script | safe }}
-
-    <script>
-        function showLoginForm() {
-            document.querySelector(".signup-form").style.display = "none";
-            document.querySelector(".login-form").style.display = "block";
-        }
-
-        function showSignupForm() {
-            document.querySelector(".login-form").style.display = "none";
-            document.querySelector(".signup-form").style.display = "block";
-        }
-    </script>
+<script></script>
 </body>
 </html>
