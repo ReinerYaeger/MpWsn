@@ -5,6 +5,19 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <title>Soil Moisture Monitoring System</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        type="text/javascript"
+        let url = `ws://${window.location.host}/ws/socket-server/`
+        const dataSocket = new WebSocket(url)
+
+        dataSocket.onmessage = function(e){
+            let data = JSON.parse(e.data)
+            document.getElementById('chart').innerHTML = `${data.box_plot}`;
+
+        }
+    </script>
+
 
 </head>
 <body>
@@ -13,6 +26,15 @@
 </header>
 
 <main>
+
+    {% autoescape off %}
+        <div id="chart">
+
+
+    </div>
+
+    {{ box_plot }}
+    {% endautoescape %}
     <section>
         <h1>Welcome to the Soil Moisture Monitoring System</h1>
         <p>Explore our study on soil moisture content using advanced technology and precise methodologies. Discover the insights we've gathered across various soil types.</p>

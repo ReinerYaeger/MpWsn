@@ -15,6 +15,8 @@ from sqlalchemy import create_engine, select, desc, Column, String, Float, DateT
 from sqlalchemy.orm import sessionmaker, declarative_base
 from django.views.decorators.csrf import csrf_protect
 import threading
+import plotly.express as px
+
 
 
 class DataGenerator:
@@ -34,22 +36,14 @@ dg = DataGenerator()
 
 def index(request):
 
+	df = px.data.tips()
+	fig = px.box(df, y="total_bill")
+	box_plot = fig.to_html(full_html=False, include_plotlyjs=False)
 
-	# if request.method == 'POST':
-	# 	username = request.POST['username']
-	# 	password = request.POST['password']
-	# 	user = authenticate(request, username=username, password=password)
-	# 	if user is not None:
-	# 		login(request, user)
-	# 		return redirect('home')  # Redirect to your home page
-	# 	else:
-	# 		# Handle invalid login
-	# 		pass
-	return render(request, 'sms/index.html')
-
-
-def my_view(request):
-	return render(request, 'index.html', {'user': request.user})
+	context ={
+		"box_plot": box_plot
+	}
+	return render(request, 'sms/index.html',context)
 
 
 def get_updated_data(request):
@@ -97,6 +91,7 @@ def charts(request):
 		height=400
 	)
 	line = plot.line(dg.x, dg.y, legend_label='f', line_width=2)
+	plot.circle(dg.x, dg.y, fill_color="white", size=8)
 	script, div = components(plot)
 	context = {
 		'script': script,

@@ -9,7 +9,6 @@ urlpatterns = [
     path('get_updated_data/', get_updated_data, name='get_updated_data'),
     path('search/', search_view, name='search'),
     path('charts/', charts, name='charts'),
-    path('myview/', page1, name="page1"),
     path('login/', CustomLoginView.as_view(success_url='sms/page1/'), name='login'),
     path('signup/', SignupView.as_view(), name='signup'),
     path('setup/',setup, name='setup'),
