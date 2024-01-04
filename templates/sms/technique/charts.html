@@ -14,67 +14,34 @@
     <script src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-3.3.2.min.js"></script>
     <script src="https://cdn.bokeh.org/bokeh/release/bokeh-api-3.3.2.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        function updateGraph() {
-            $.ajax({
-                url: '/get_updated_data/',
-                method: 'GET',
-                success: function(data) {
-                    // Update the plot with the fetched data
-                    plot.data_source.data['x'] = data.x;
-                    plot.data_source.data['y'] = data.y;
 
-                    plot.trigger('change');
-                },
-                complete: function() {
-                    // Schedule the next update after a delay (e.g., 5 seconds)
-                    setTimeout(updateGraph, 5000);
-                }
-            });
-        }
-        updateGraph();
-    </script>
-
-    <script>
-        type="text/javascript"
-        let url = `ws://${window.location.host}/ws/socket-server/`
-        const dataSocket = new WebSocket(url)
-
-        dataSocket.onmessage = function(e){
-            let data = JSON.parse(e.data)
-            console.log('Data:',data)
-        }
-    </script>
 </head>
 <body>
     <!-- Header Section -->
     <header>
         {% include 'sms/navi.html' %}
+
     </header>
 
     <!-- Main Content Section -->
     <main>
+        <section>
+        <h2>Live Data Analysis</h2>
 
-            <h2>Live Data Analysis</h2>
+           {{ div | safe }}
+           {{ script | safe }}
 
-
-<!-- Bokeh Plot Components -->
-    {{ div | safe }}
-    {{ script | safe }}
         <!-- Additional Information or Instructions -->
+        <p>Explore the live data analysis presented in the interactive chart above.</p>
+        <p>Data is updated every 5 seconds to provide real-time insights.</p>
+</section>
+        <br>
+<section>
+        <h2>Live Data Analysis2</h2>
 
-
-            <p>Explore the live data analysis presented in the interactive chart above.</p>
-            <p>Data is updated every 5 seconds to provide real-time insights.</p>
-<br>
-            <h2>Live Data Analysis2</h2>
-
-            <p>Explore the live data analysis presented in the interactive chart above.</p>
-            <p>Data is updated every 5 seconds to provide real-time insights.</p>
-
-
+        <p>Explore the live data analysis presented in the interactive chart above.</p>
+        <p>Data is updated every 5 seconds to provide real-time insights.</p>
+</section>
     </main>
-
-
 </body>
 </html>

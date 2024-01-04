@@ -1,20 +1,21 @@
 import random
+import threading
 from time import sleep
 
+from bokeh.embed import components
+from bokeh.plotting import figure
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.models import User
+from django.contrib.auth.views import LoginView, LogoutView
+from django.http import JsonResponse, request
 from django.shortcuts import render, redirect
-from bokeh.plotting import figure, output_file, show
-from bokeh.embed import components
-from django.http import JsonResponse, HttpResponse
 from django.urls import reverse_lazy
-from django.views import generic
-from django.views.generic import CreateView
-from sqlalchemy import create_engine, select, desc, Column, String, Float, DateTime
-from sqlalchemy.orm import sessionmaker, declarative_base
 from django.views.decorators.csrf import csrf_protect
-import threading
+from django.views.generic import CreateView
+from sqlalchemy.orm import declarative_base
+
+from sms.forms import SignupForm
 
 
 class DataGenerator:
@@ -33,23 +34,7 @@ dg = DataGenerator()
 
 
 def index(request):
-
-
-	# if request.method == 'POST':
-	# 	username = request.POST['username']
-	# 	password = request.POST['password']
-	# 	user = authenticate(request, username=username, password=password)
-	# 	if user is not None:
-	# 		login(request, user)
-	# 		return redirect('home')  # Redirect to your home page
-	# 	else:
-	# 		# Handle invalid login
-	# 		pass
 	return render(request, 'sms/index.html')
-
-
-def my_view(request):
-	return render(request, 'index.html', {'user': request.user})
 
 
 def get_updated_data(request):
@@ -60,16 +45,6 @@ def get_updated_data(request):
 	}
 
 	return JsonResponse(data)
-
-
-def search_view(request):
-	if 'q' in request.GET:
-		query = request.GET['q']
-
-		return HttpResponse(f"Search results for: {query}")
-	else:
-
-		return HttpResponse("No search query provided.")
 
 
 shared_data = {}
@@ -108,11 +83,49 @@ def charts(request):
 class CustomLoginView(LoginView):
 	template_name = 'sms/login.html'
 
+	class CustomLogoutView(LogoutView):
+		next_page = reverse_lazy('login')  # 'login' should be replaced with the name of your login URL
 
-class SignupView(CreateView):
-	form_class = UserCreationForm
-	success_url = reverse_lazy('login')  # Redirect to login page upon successful sign-up
-	template_name = 'signup.html'
+		def get_next_page(self):
+			# Customize this method if needed
+			return self.next_page
+
+		def dispatch(self, request, *args, **kwargs):
+			response = super().dispatch(request, *args, **kwargs)
+			return response
+
+	def form_valid(self, form):
+		"""If the form is valid, perform login and redirect."""
+		login(self.request, form.get_user())
+		return redirect('index')  # Adjust the redirect URL
+
+	def form_invalid(self, form):
+		"""If the form is invalid, render the invalid form."""
+		return self.render_to_response(self.get_context_data(form=form))
+
+
+class CustomLogoutView(LogoutView):
+	next_page = reverse_lazy('index')
+
+	def get_next_page(self):
+		return self.next_page
+
+	def dispatch(self, requests, *args, **kwargs):
+		response = super().dispatch(requests, *args, **kwargs)
+		return response
+
+
+def signup_view(request):
+	if request.method == 'POST':
+		form = SignupForm(request.POST)
+		if form.is_valid():
+			form.save()
+			# Redirect to a success page or login page
+			return redirect('login')  # You can adjust the redirect URL
+	else:
+		form = SignupForm()
+
+	return render(request, 'sms/signup.html', {'form': form})
 
 
 def setup(request):

@@ -3,51 +3,17 @@
 <html lang="en">
 <head>
     <title>Major Project</title>
+
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
+
 </head>
 <body>
- <div class="welcome-message">
-        <h1>Welcome to our Soil Analysis Platform!</h1>
-        <p>
-            Explore the changes in soil characteristics as the sensor readings stabilize for various soil types.
-            This analysis will involve measuring constant sensor values for each soil type, and the gathered data
-            will undergo comparison and analysis using the ANOVA technique.
-        </p>
-        <p>
-            Our platform leverages Python 3 to generate insightful box plots, visually displaying the results
-            for easy interpretation. Join us in unraveling the secrets beneath the surface of different soil types!
-        </p>
-    </div>
 
-
-        <div class="login-form" id="login-form">
-    <!-- Login form -->
-    <form method="post" action="{% url 'login' %}" >
+    <h2>Login</h2>
+    <form method="post" action="{% url 'login' %}">
         {% csrf_token %}
-        <label for="login_username">Username:</label>
-        <input type="text" id="login_username" name="login_username">
-        <label for="login_password">Password:</label>
-        <input type="password" id="login_password" name="login_password">
-        <!--<button type="button" onclick="showLoginForm()">Login</button>-->
+        {{ form.as_p }}
         <button type="submit">Login</button>
     </form>
-</div>
-
-
-    {{ div | safe }}
-
-    {{ script | safe }}
-
-    <script>
-        function showLoginForm() {
-            document.querySelector(".signup-form").style.display = "none";
-            document.querySelector(".login-form").style.display = "block";
-        }
-
-        function showSignupForm() {
-            document.querySelector(".login-form").style.display = "none";
-            document.querySelector(".signup-form").style.display = "block";
-        }
-    </script>
 </body>
 </html>

@@ -13,6 +13,7 @@ header {
     color: #fff;
     padding: 15px;
     text-align: center;
+    position: relative;
 }
 
 main {
@@ -20,5 +21,11 @@ main {
     margin: 20px auto;
 
 }
+section img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid;
+    margin-bottom: 20px;
+    padding: 10px;
 
-
+}
