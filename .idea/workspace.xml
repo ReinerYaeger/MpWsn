@@ -104,32 +104,6 @@
       <recent name="C:\Users\gaila\PycharmProjects\MpWsn\templates\profiles" />
     </key>
   </component>
-  <component name="RunManager">
-    <configuration name="MpWsn" type="Python.DjangoServer" factoryName="Django server">
-      <module name="MpWsn" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-        <env name="DJANGO_SETTINGS_MODULE" value="MpWsn.settings" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="launchJavascriptDebuger" value="false" />
-      <option name="port" value="8000" />
-      <option name="host" value="" />
-      <option name="additionalOptions" value="" />
-      <option name="browserUrl" value="" />
-      <option name="runTestServer" value="false" />
-      <option name="runNoReload" value="false" />
-      <option name="useCustomRunCommand" value="false" />
-      <option name="customRunCommand" value="" />
-      <method v="2" />
-    </configuration>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -138,7 +112,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1704252031759</updated>
-      <workItem from="1704252036398" duration="22735000" />
+      <workItem from="1704252036398" duration="22897000" />
     </task>
     <task id="LOCAL-00001" summary="the login , signup and logout works ......  the home page and profile page isnt working when im logged in .....and everytime i run the server it tells me (You have 1 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): sms.&#10;Run 'python manage.py migrate' to apply them.) but it give me an error when i try to migrate">
       <option name="closed" value="true" />
@@ -179,7 +153,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/MpWsn/settings.py</url>
-          <line>130</line>
+          <line>126</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
