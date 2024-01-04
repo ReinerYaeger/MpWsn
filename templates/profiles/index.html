@@ -1,10 +1,16 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Profiles App</title>
 </head>
 <body>
+{% block content %}
+    <h1>Welcome to the Profiles App</h1>
+    {% include 'sms/navi.html' %}
+
+{% endblock %}
 
 </body>
 </html>

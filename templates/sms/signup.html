@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Major Project</title>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+
+</head>
+<body>
+
+<div class="signup-form">
+    {% block content %}
+        <form method="post" action="{% url 'signup' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Sign Up</button>
+        </form>
+    {% endblock %}
+</div>
+<script>
+
+function toggleForms() {
+    // Toggle the visibility of the forms
+    document.getElementById("initial-form").style.display = "none";
+    document.getElementById("second-form").style.display = "block";
+}
+</script>
+
+</body>
+</html>

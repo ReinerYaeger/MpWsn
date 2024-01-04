@@ -1,13 +1,25 @@
-# Installation
+# About
 
-This application was developed using the XAMPP stack.
+The soil moisture Wireless Sensor Network is designed to collect, analyze, and visualize soil moisture data from various sensors placed across a farm.
+
+This application facilitates the collection of soil moisture data from sensors connected to an arduino and a Raspberry Pi via WiFi.
+
+## System Design 
+### Theoretical System Design 
+![Soil Moisture Monitoring System](media/images/system%20design/System_Design.png "Soil Moisture Monitoring System")
+
+### Practical System Design
+![Soil Moisture Monitoring System](media/images/system%20design/Practical_System_Design.png "Soil Moisture Monitoring System")
+
+# Installation
 
 ### Prerequisites
 
 Ensure you have the following installed:
 
-- **XAMPP**: Set up XAMPP on your system to manage Apache, MySQL, and PHP.
-- **Python**: Ensure Python is installed on your machine.
+- **XAMPP**
+- **Python**
+- **Git**
 
 ### Database Setup
 
