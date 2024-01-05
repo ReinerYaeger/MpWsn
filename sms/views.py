@@ -83,17 +83,6 @@ def charts(request):
 class CustomLoginView(LoginView):
 	template_name = 'sms/login.html'
 
-	class CustomLogoutView(LogoutView):
-		next_page = reverse_lazy('login')  # 'login' should be replaced with the name of your login URL
-
-		def get_next_page(self):
-			# Customize this method if needed
-			return self.next_page
-
-		def dispatch(self, request, *args, **kwargs):
-			response = super().dispatch(request, *args, **kwargs)
-			return response
-
 	def form_valid(self, form):
 		"""If the form is valid, perform login and redirect."""
 		login(self.request, form.get_user())
@@ -111,11 +100,11 @@ class CustomLogoutView(LogoutView):
 		return self.next_page
 
 	def dispatch(self, requests, *args, **kwargs):
-		response = super().dispatch(requests, *args, **kwargs)
-		return response
+		super().dispatch(requests, *args, **kwargs)
+		return redirect(request, 'sms/index')
 
 
-def signup_view(request):
+def signup_view(requests):
 	if request.method == 'POST':
 		form = SignupForm(request.POST)
 		if form.is_valid():

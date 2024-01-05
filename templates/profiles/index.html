@@ -7,7 +7,7 @@
 </head>
 <body>
 {% block content %}
-    <h1>Welcome to the Profiles App</h1>
+    <h1>Welcome {{ user.username }}</h1>
     {% include 'sms/navi.html' %}
 
 {% endblock %}
