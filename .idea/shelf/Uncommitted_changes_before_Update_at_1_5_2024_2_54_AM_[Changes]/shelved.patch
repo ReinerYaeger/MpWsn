@@ -1,0 +1,247 @@
+Index: static/css/login.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/static/css/login.css b/static/css/login.css
+new file mode 100644
+--- /dev/null	(date 1704441109912)
++++ b/static/css/login.css	(date 1704441109912)
+@@ -0,0 +1,54 @@
++body {
++    font-family: 'Arial', sans-serif;
++    background-color: #f4f4f4;
++    margin: 0;
++    padding: 0;
++    display: flex;
++    align-items: center;
++    justify-content: center;
++    height: 100vh;
++}
++
++h2 {
++    color: #333;
++    margin-bottom: 20px;
++}
++
++form {
++    background-color: #fff;
++    padding: 20px;
++    border-radius: 8px;
++    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
++    max-width: 500px;
++    width: 100%;
++    margin: 0 auto;
++}
++
++label {
++    display: block;
++    margin-bottom: 8px;
++    color: #555;
++}
++
++input {
++    width: calc(100% - 16px);
++    padding: 8px;
++    margin-bottom: 16px;
++    border: 1px solid #ccc;
++    border-radius: 4px;
++}
++
++button {
++    background-color: #4caf50;
++    color: #fff;
++    padding: 10px 15px;
++    border: none;
++    border-radius: 4px;
++    cursor: pointer;
++    font-size: 16px;
++    transition: background-color 0.3s;
++}
++
++button:hover {
++    background-color: #45a049;
++}
+\ No newline at end of file
+Index: profiles/views.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.shortcuts import render, get_object_or_404\r\nfrom .models import UserProfile\r\n\r\n\r\ndef user_profile(request, username):\r\n\tuser_profiles = get_object_or_404(UserProfile, user__username=username)\r\n\treturn render(request, 'profile/user_profile.html', {'user_profile': user_profiles})\r\n\r\n\r\ndef index(request):\r\n\treturn render(request, 'profiles/index.html')\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/profiles/views.py b/profiles/views.py
+--- a/profiles/views.py	(revision 1d45f3f1e0e03d57c726134137693dcc3119f9df)
++++ b/profiles/views.py	(date 1704441109775)
+@@ -1,11 +1,38 @@
+-from django.shortcuts import render, get_object_or_404
+-from .models import UserProfile
++from bokeh.embed import components
++from bokeh.plotting import figure
++from django.shortcuts import render
+ 
+-
+-def user_profile(request, username):
+-	user_profiles = get_object_or_404(UserProfile, user__username=username)
+-	return render(request, 'profile/user_profile.html', {'user_profile': user_profiles})
++from sms.views import dg
+ 
+ 
+ def index(request):
+ 	return render(request, 'profiles/index.html')
++
++
++def charts(request):
++	# Start the data generation in a separate thread
++	import threading
++	data_thread = threading.Thread(target=dg.gen_data)
++	data_thread.daemon = True  # Set the thread as daemon so it stops when the main thread stops
++	data_thread.start()
++
++	# Prepare initial plot without data
++	title = 'y = f(x)'
++	plot = figure(
++		title=title,
++		x_axis_label='X-Axis',
++		y_axis_label='Y-Axis',
++		width=400,
++		height=400
++	)
++	line = plot.line(dg.x, dg.y, legend_label='f', line_width=2)
++	script, div = components(plot)
++	context = {
++		'script': script,
++		'div': div,
++	}
++	return render(request, 'profiles/technique/charts.html', context)
++
++
++def setup(request):
++	return render(request, 'profiles/setup/setup.html')
+Index: profiles/urls.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.urls import path\r\nfrom . import views\r\nfrom .views import user_profile\r\n\r\nurlpatterns = [\r\n\tpath('profile/', views.index, name='index'),\r\n\tpath('profile/<str:username>/', user_profile, name='user_profile'),\r\n]\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/profiles/urls.py b/profiles/urls.py
+--- a/profiles/urls.py	(revision 1d45f3f1e0e03d57c726134137693dcc3119f9df)
++++ b/profiles/urls.py	(date 1704441109762)
+@@ -1,8 +1,8 @@
+ from django.urls import path
++
+ from . import views
+-from .views import user_profile
+ 
+ urlpatterns = [
+ 	path('profile/', views.index, name='index'),
+-	path('profile/<str:username>/', user_profile, name='user_profile'),
++
+ ]
+Index: MpWsn/urls.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\"\"\"\r\nURL configuration for MpWsn project.\r\n\r\nThe `urlpatterns` list routes URLs to views. For more information please see:\r\n    https://docs.djangoproject.com/en/5.0/topics/http/urls/\r\nExamples:\r\nFunction views\r\n    1. Add an import:  from my_app import views\r\n    2. Add a URL to urlpatterns:  path('', views.home, name='home')\r\nClass-based views\r\n    1. Add an import:  from other_app.views import Home\r\n    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')\r\nIncluding another URLconf\r\n    1. Import the include() function: from django.urls import include, path\r\n    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))\r\n\"\"\"\r\nfrom django.contrib import admin\r\nfrom django.urls import path, include\r\nfrom django.conf import settings\r\nfrom django.conf.urls.static import static\r\n\r\nurlpatterns = [\r\n\tpath('admin/', admin.site.urls),\r\n\tpath('', include('sms.urls')),\r\n\tpath('accounts/', include('django.contrib.auth.urls')),\r\n\tpath('profiles/', include('profiles.urls')),\r\n\t# path('/pi_talk', include('pi_talk.urls')),\r\n\r\n]\r\nif settings.DEBUG:\r\n\turlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)\r\n\r\nurlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)\r\nurlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/MpWsn/urls.py b/MpWsn/urls.py
+--- a/MpWsn/urls.py	(revision 1d45f3f1e0e03d57c726134137693dcc3119f9df)
++++ b/MpWsn/urls.py	(date 1704441109611)
+@@ -22,11 +22,12 @@
+ urlpatterns = [
+ 	path('admin/', admin.site.urls),
+ 	path('', include('sms.urls')),
+-	path('accounts/', include('django.contrib.auth.urls')),
++	# path('accounts/', include('django.contrib.auth.urls')),
+ 	path('profiles/', include('profiles.urls')),
+ 	# path('/pi_talk', include('pi_talk.urls')),
+ 
+ ]
++
+ if settings.DEBUG:
+ 	urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+ 
+Index: sms/urls.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.contrib.auth.views import LoginView, LogoutView\r\nfrom django.urls import path\r\n\r\nfrom .views import index, continuous_data_retrieval_api, get_updated_data, charts, setup, signup_view, CustomLogoutView\r\n\r\nurlpatterns = [\r\n\tpath('', index, name='index'),\r\n\tpath('soil_moisture_data/', continuous_data_retrieval_api, name='continuous_retrieval'),\r\n\tpath('get_updated_data/', get_updated_data, name='get_updated_data'),\r\n\tpath('charts/', charts, name='charts'),\r\n\tpath('accounts/login/', LoginView.as_view(template_name='sms/login.html'), name='login'),\r\n\tpath('logout/', CustomLogoutView.as_view(), name='logout'),\r\n\tpath('signup/', signup_view, name='signup'),\r\n\tpath('setup/', setup, name='setup'),\r\n]\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/sms/urls.py b/sms/urls.py
+--- a/sms/urls.py	(revision 1d45f3f1e0e03d57c726134137693dcc3119f9df)
++++ b/sms/urls.py	(date 1704441109880)
+@@ -1,6 +1,5 @@
+ from django.contrib.auth.views import LoginView, LogoutView
+ from django.urls import path
+-
+ from .views import index, continuous_data_retrieval_api, get_updated_data, charts, setup, signup_view, CustomLogoutView
+ 
+ urlpatterns = [
+Index: pi_talk/urls.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.urls import path\r\nfrom .views import index\r\n\r\nurlpatterns = [\r\n    path('', index, name='index'),\r\n\r\n]
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/pi_talk/urls.py b/pi_talk/urls.py
+--- a/pi_talk/urls.py	(revision 1d45f3f1e0e03d57c726134137693dcc3119f9df)
++++ b/pi_talk/urls.py	(date 1704441109679)
+@@ -1,7 +1,10 @@
+ from django.urls import path
++
++from profiles.views import user_profile
+ from .views import index
+ 
+ urlpatterns = [
+     path('', index, name='index'),
++    path('profile/<str:username>/', user_profile, name='user_profile'),
+ 
+ ]
+\ No newline at end of file
+Index: sms/views.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import random\r\nimport threading\r\nfrom time import sleep\r\n\r\nfrom bokeh.embed import components\r\nfrom bokeh.plotting import figure\r\nfrom django.contrib.auth import authenticate, login\r\nfrom django.contrib.auth.forms import UserCreationForm\r\nfrom django.contrib.auth.models import User\r\nfrom django.contrib.auth.views import LoginView, LogoutView\r\nfrom django.http import JsonResponse, request\r\nfrom django.shortcuts import render, redirect\r\nfrom django.urls import reverse_lazy\r\nfrom django.views.decorators.csrf import csrf_protect\r\nfrom django.views.generic import CreateView\r\nfrom sqlalchemy.orm import declarative_base\r\n\r\nfrom sms.forms import SignupForm\r\n\r\n\r\nclass DataGenerator:\r\n\tdef __init__(self):\r\n\t\tself.x = []\r\n\t\tself.y = []\r\n\r\n\tdef gen_data(self):\r\n\t\twhile True:\r\n\t\t\tself.x.append(random.randint(0, 150))\r\n\t\t\tself.y.append(random.randint(0, 150))\r\n\t\t\tsleep(5)\r\n\r\n\r\ndg = DataGenerator()\r\n\r\n\r\ndef index(request):\r\n\treturn render(request, 'sms/index.html')\r\n\r\n\r\ndef get_updated_data(request):\r\n\t# Access the x and y values from the DataGenerator instance\r\n\tdata = {\r\n\t\t'x': dg.x,\r\n\t\t'y': dg.y,\r\n\t}\r\n\r\n\treturn JsonResponse(data)\r\n\r\n\r\nshared_data = {}\r\nlock = threading.Lock()\r\n\r\n\r\ndef page1(request):\r\n\treturn render(request, 'sms/index.html')\r\n\r\n\r\ndef charts(request):\r\n\t# Start the data generation in a separate thread\r\n\timport threading\r\n\tdata_thread = threading.Thread(target=dg.gen_data)\r\n\tdata_thread.daemon = True  # Set the thread as daemon so it stops when the main thread stops\r\n\tdata_thread.start()\r\n\r\n\t# Prepare initial plot without data\r\n\ttitle = 'y = f(x)'\r\n\tplot = figure(\r\n\t\ttitle=title,\r\n\t\tx_axis_label='X-Axis',\r\n\t\ty_axis_label='Y-Axis',\r\n\t\twidth=400,\r\n\t\theight=400\r\n\t)\r\n\tline = plot.line(dg.x, dg.y, legend_label='f', line_width=2)\r\n\tscript, div = components(plot)\r\n\tcontext = {\r\n\t\t'script': script,\r\n\t\t'div': div,\r\n\t}\r\n\treturn render(request, 'sms/technique/charts.html', context)\r\n\r\n\r\nclass CustomLoginView(LoginView):\r\n\ttemplate_name = 'sms/login.html'\r\n\r\n\tclass CustomLogoutView(LogoutView):\r\n\t\tnext_page = reverse_lazy('login')  # 'login' should be replaced with the name of your login URL\r\n\r\n\t\tdef get_next_page(self):\r\n\t\t\t# Customize this method if needed\r\n\t\t\treturn self.next_page\r\n\r\n\t\tdef dispatch(self, request, *args, **kwargs):\r\n\t\t\tresponse = super().dispatch(request, *args, **kwargs)\r\n\t\t\treturn response\r\n\r\n\tdef form_valid(self, form):\r\n\t\t\"\"\"If the form is valid, perform login and redirect.\"\"\"\r\n\t\tlogin(self.request, form.get_user())\r\n\t\treturn redirect('index')  # Adjust the redirect URL\r\n\r\n\tdef form_invalid(self, form):\r\n\t\t\"\"\"If the form is invalid, render the invalid form.\"\"\"\r\n\t\treturn self.render_to_response(self.get_context_data(form=form))\r\n\r\n\r\nclass CustomLogoutView(LogoutView):\r\n\tnext_page = reverse_lazy('index')\r\n\r\n\tdef get_next_page(self):\r\n\t\treturn self.next_page\r\n\r\n\tdef dispatch(self, requests, *args, **kwargs):\r\n\t\tresponse = super().dispatch(requests, *args, **kwargs)\r\n\t\treturn response\r\n\r\n\r\ndef signup_view(request):\r\n\tif request.method == 'POST':\r\n\t\tform = SignupForm(request.POST)\r\n\t\tif form.is_valid():\r\n\t\t\tform.save()\r\n\t\t\t# Redirect to a success page or login page\r\n\t\t\treturn redirect('login')  # You can adjust the redirect URL\r\n\telse:\r\n\t\tform = SignupForm()\r\n\r\n\treturn render(request, 'sms/signup.html', {'form': form})\r\n\r\n\r\ndef setup(request):\r\n\treturn render(request, 'sms/setup/setup.html')\r\n\r\n\r\n@csrf_protect\r\ndef continuous_data_retrieval_api(request):\r\n\tBase = declarative_base()\r\n\r\n# def queue_to_list(q):\r\n#     return list(q.queue)\r\n#\r\n# class SoilSensorData(Base):\r\n#     __tablename__ = 'soil_sensor_data'\r\n#\r\n#     sensor_name = Column(String)\r\n#     sensor_data = Column(Float)\r\n#     sensor_date_time = Column(DateTime, primary_key=True)\r\n#\r\n# engine = create_engine('mysql+mysqlconnector://root:@localhost/mp_wsn', pool_recycle=3600)\r\n# Session = sessionmaker(bind=engine)\r\n# session = Session()\r\n#\r\n# analog_dict = {\r\n#     'A0': {'soil_moisture_data': Queue(maxsize=5), 'timestamp': Queue(maxsize=5)},\r\n#     'A1': {'soil_moisture_data': Queue(maxsize=5), 'timestamp': Queue(maxsize=5)},\r\n#     'A2': {'soil_moisture_data': Queue(maxsize=5), 'timestamp': Queue(maxsize=5)},\r\n# }\r\n#\r\n# query = (\r\n#     select(SoilSensorData.sensor_name, SoilSensorData.sensor_data, SoilSensorData.sensor_date_time)\r\n#     .filter(SoilSensorData.sensor_name.in_(['A0', 'A1', 'A2']))\r\n#     .order_by(desc(SoilSensorData.sensor_date_time))\r\n#     .limit(1)\r\n# )\r\n#\r\n# query_result = session.execute(query)\r\n#\r\n# for row in query_result:\r\n#     sensor_name = row[0]\r\n#     sensor_data = row[1]\r\n#     sensor_date_time = row[2].strftime('%Y-%m-%d %H:%M:%S')\r\n#\r\n#     if analog_dict[sensor_name]['soil_moisture_data'].qsize() >= 5:\r\n#         analog_dict[sensor_name]['soil_moisture_data'].get()\r\n#         analog_dict[sensor_name]['timestamp'].get()\r\n#     analog_dict[sensor_name]['soil_moisture_data'].put(sensor_data)\r\n#     analog_dict[sensor_name]['timestamp'].put(sensor_date_time)\r\n#\r\n#     print(f'A0  {analog_dict[\"A0\"][\"soil_moisture_data\"]} {analog_dict[\"A0\"][\"timestamp\"]}')\r\n#     print(f'A1  {analog_dict[\"A1\"][\"soil_moisture_data\"]} {analog_dict[\"A1\"][\"timestamp\"]}')\r\n#     print(f'A2  {analog_dict[\"A2\"][\"soil_moisture_data\"]} {analog_dict[\"A2\"][\"timestamp\"]}')\r\n#\r\n# return JsonResponse({'soil_moisture_data': serializable_dict})\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/sms/views.py b/sms/views.py
+--- a/sms/views.py	(revision 1d45f3f1e0e03d57c726134137693dcc3119f9df)
++++ b/sms/views.py	(date 1704441109895)
+@@ -4,15 +4,12 @@
+ 
+ from bokeh.embed import components
+ from bokeh.plotting import figure
+-from django.contrib.auth import authenticate, login
+-from django.contrib.auth.forms import UserCreationForm
+-from django.contrib.auth.models import User
++from django.contrib.auth import login
+ from django.contrib.auth.views import LoginView, LogoutView
+-from django.http import JsonResponse, request
++from django.http import JsonResponse
+ from django.shortcuts import render, redirect
+ from django.urls import reverse_lazy
+ from django.views.decorators.csrf import csrf_protect
+-from django.views.generic import CreateView
+ from sqlalchemy.orm import declarative_base
+ 
+ from sms.forms import SignupForm
+@@ -79,12 +76,8 @@
+ 	}
+ 	return render(request, 'sms/technique/charts.html', context)
+ 
+-
+-class CustomLoginView(LoginView):
+-	template_name = 'sms/login.html'
+-
+-	class CustomLogoutView(LogoutView):
+-		next_page = reverse_lazy('login')  # 'login' should be replaced with the name of your login URL
++class CustomLogoutView(LogoutView):
++		next_page = reverse_lazy('login')
+ 
+ 		def get_next_page(self):
+ 			# Customize this method if needed
