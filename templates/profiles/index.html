@@ -3,14 +3,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    
+     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <title>Profiles App</title>
 </head>
 <body>
-{% block content %}
+
     <h1>Welcome {{ user.username }}</h1>
     {% include 'sms/navi.html' %}
 
-{% endblock %}
+
 
 </body>
 </html>

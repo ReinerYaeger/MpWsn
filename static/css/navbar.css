@@ -1,24 +1,59 @@
-ul {
-   list-style-type: none;
-  margin: 0;
-  padding: 0;
-  background-color: #7f886e;
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
 }
 
-li {
-  margin-right: 10px;
-  display: inline-block;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: #2d3e50; /* Dark blue-green background color */
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
 }
-a{
-  display: inline-block;
-  color: Black;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
+
+ul li {
+    float: left;
 }
-li a:hover, .dropdown:hover {
-  color: red;
+
+ul li a {
+    display: block;
+    color: #ecf0f1; /* Light text color */
+    padding: 14px 20px; /* Increased padding for better spacing */
+    text-decoration: none;
+    transition: color 0.3s ease; /* Smooth color transition on hover */
+}
+
+ul li a:hover {
+    color: #e74c3c; /* Red on hover */
+}
+
+/* Position Logout, Login, and Signup buttons on the extreme right */
+.logout-btn,
+.login-btn,
+.signup-btn {
+    float: right;
+    background-color: #3498db; /* Blue color for buttons */
+    color: #fff;
+    padding: 14px 20px;
+    border: none;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-left: 10px; /* Adjust spacing between buttons */
+    cursor: pointer; /* Add cursor pointer for better interactivity */
+    transition: background-color 0.3s ease; /* Smooth background color transition on hover */
+}
+
+.logout-btn:hover,
+.login-btn:hover,
+.signup-btn:hover {
+    background-color: #2980b9; /* Darker blue on hover */
+}
+
+@media screen and (max-width: 600px) {
+    ul li a {
+        font-size: 14px;
+        padding: 10px;
+    }
 }

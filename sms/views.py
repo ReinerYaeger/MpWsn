@@ -104,7 +104,7 @@ class CustomLogoutView(LogoutView):
 		return redirect(request, 'sms/index')
 
 
-def signup_view(requests):
+def signup_view(request):
 	if request.method == 'POST':
 		form = SignupForm(request.POST)
 		if form.is_valid():
@@ -117,8 +117,8 @@ def signup_view(requests):
 	return render(request, 'sms/signup.html', {'form': form})
 
 
-def setup(request):
-	return render(request, 'sms/setup/setup.html')
+def setup(requests):
+	return render(requests, 'sms/setup/setup.html')
 
 
 @csrf_protect
