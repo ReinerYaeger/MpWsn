@@ -1,8 +1,8 @@
 from django.urls import path
 from . import views
-from .views import user_profile
+from .views import administrator
 
 urlpatterns = [
-	path('profile/', views.index, name='index'),
-	path('profile/<str:username>/', user_profile, name='user_profile'),
+	path('administrator/', views.index, name='index'),
+	path('administrator/<str:username>/', administrator, name='user_profile'),
 ]

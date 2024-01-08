@@ -3,57 +3,45 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <title>Soil Moisture Monitoring System</title>
+
+    <title>Dashboard</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script>
-        type="text/javascript"
+
+        type = "text/javascript"
         let url = `ws://${window.location.host}/ws/socket-server/`
         const dataSocket = new WebSocket(url)
 
-        dataSocket.onmessage = function(e){
+        dataSocket.onmessage = function (e) {
             let data = JSON.parse(e.data)
-            document.getElementById('chart').innerHTML = `${data.box_plot}`;
-
         }
     </script>
-
-
 </head>
 <body>
-<header>
-    {% include 'sms/navi.html' %}
-</header>
+{% include 'sms/navigation/sidebar.html' %}
+<div class="overall_container">
+    <main>
+        <div class="container">
+            <section>
+                <h1>Welcome to the Soil Moisture Monitoring System</h1>
+                <br>
+                <p>Change</p>
+                <p>Change</p>
+                <p>Change</p>
+            </section>
 
-<main>
+            <br>
+            <section>
+                <h2>Experiment Setup</h2>
+                <p>Change</p>
+            </section>
+        </div>
 
-    {% autoescape off %}
-        <div id="chart">
+    </main>
+</div>
 
-
-    </div>
-
-    {{ box_plot }}
-    {% endautoescape %}
-    <section>
-        <h1>Welcome to the Soil Moisture Monitoring System</h1>
-        <p>Explore our study on soil moisture content using advanced technology and precise methodologies. Discover the insights we've gathered across various soil types.</p>
-        <p>Our platform leverages Python 3 to generate insightful box plots, visually displaying the results for easy interpretation. Join us in unraveling the secrets beneath the surface of different soil types!</p>
-    <p>Additionally, delve into our study on soil moisture content using advanced technology and precise methodologies. Discover the insights we've gathered across various soil types.</p>
-    </section>
-
-    <section>
-        <h2>Experiment Setup</h2>
-        <p>Learn about the materials used, sensor connections, and controlled irrigation simulations in our study.</p>
-        <!-- Add more sections and content as needed -->
-    </section>
-
-    <section>
-        <h2>Data Analysis and Representation</h2>
-
-        <p>Explore our findings through Python 3 with Pandas version 2.1.4 and visual representations using a Django Web Application.</p>
-    </section>
-</main>
 
 <script></script>
 </body>
