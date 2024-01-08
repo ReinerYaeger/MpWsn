@@ -4,7 +4,7 @@ import logging
 from mysql.connector import connect, Error
 import asyncio
 
-logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', filename='mp_wn.log', encoding='utf-8',
+logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', filename='../iot/pi_files/mp_wn.log', encoding='utf-8',
                     level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 

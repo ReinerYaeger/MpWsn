@@ -8,7 +8,7 @@ from collections import deque
 
 Base = declarative_base()
 logger = logging.getLogger(__name__)
-logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', filename='mp_wn.log', encoding='utf-8',
+logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', filename='../iot/pi_files/mp_wn.log', encoding='utf-8',
                     level=logging.DEBUG)
 
 
