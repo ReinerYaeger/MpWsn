@@ -1,2 +1,2 @@
-Soil_weight,A0,A1,A2
-62.78,2,2,2
+Soil_weight_loam,Soil_weight_sand,Soil_weight_clay,A0_loam,A1_loam,A2_loam,A0_sand,A1_sand,A2_sand,A0_clay,A1_clay,A2_clay
+62.78,,,2,2,2,2,2,2,,,

@@ -14,7 +14,7 @@ def gravimetric_method(soil_sample_weight, container_mass=22.75, mass_of_dried_s
 
 def analyse_experiment_csv_results():
     weight = []
-    A0 = []
+    A0 = [] #update according to the csv
     A1 = []
     A2 = []
     csv_file = open('experiment.csv', 'r')
