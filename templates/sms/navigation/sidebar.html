@@ -17,6 +17,17 @@
         <span class="logo_name">Field Sense</span>
     </div>
     <ul class="nav-links">
+
+        <li>
+            <a href="{%  url 'map_view' %}">
+                <i class='bx bx-map-alt'></i>
+                <span class="link_name">Map</span>
+            </a>
+            <ul class="sub-menu blank">
+                <li><a class="link_name" href="{% url 'map_view' %}">Map</a></li>
+            </ul>
+        </li>
+        <br>
         <li>
             <div class="iocn-link">
                 <a href="{% url 'experiment' %}">
@@ -70,7 +81,7 @@
                     <!--<img src="image/profile.jpg" alt="profileImg">-->
                 </div>
                 <div class="name-job">
-                    <div class="profile_name">Major Project </div>
+                    <div class="profile_name">Major Project</div>
                     <div class="job">Field Sense</div>
                 </div>
                 <i class='bx bx-log-out'></i>

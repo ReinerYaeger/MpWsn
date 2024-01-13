@@ -2,14 +2,16 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path, include
 from pi_talk import urls
 from profiles.views import administrator
-from .views import index, experiment, live_analytics, experiment_results
+from .views import index, experiment, live_analytics, experiment_results, map_view
 
 urlpatterns = [
 	path('', index, name='index'),
-	path('/live_analytics', live_analytics, name='live_analytics'),
-	path('/experiment_results', experiment_results, name='experiment_results'),
-	path('/experiment', experiment, name='experiment'),
-	path('/administrator', administrator, name="administrator"),
+	path('live_analytics', live_analytics, name='live_analytics'),
+	path('experiment_results', experiment_results, name='experiment_results'),
+	path('experiment', experiment, name='experiment'),
+	path('administrator', administrator, name="administrator"),
+	path('map_view', map_view, name="map_view"),
+	path('map_view/<str:parish>', map_view, name="map_view"),
 
 	# path('soil_moisture_data/', continuous_data_retrieval_api, name='continuous_retrieval'),
 	# path('get_updated_data/', get_updated_data, name='get_updated_data'),

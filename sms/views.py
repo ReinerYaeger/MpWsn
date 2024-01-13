@@ -1,22 +1,7 @@
-import random
-import threading
-from time import sleep
-
-from bokeh.embed import components
-from bokeh.plotting import figure
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-from django.contrib.auth.views import LoginView, LogoutView
-from django.http import JsonResponse, request
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
-from django.views.decorators.csrf import csrf_protect
-from django.views.generic import CreateView
-from sqlalchemy.orm import declarative_base
-
 
 # from sms.forms import SignupForm
+#from django.contrib.gis.geos import Point
 
 
 def index(requests):
@@ -40,6 +25,16 @@ def experiment_results(requests):
     }
     return render(requests, 'sms/technique/live_analytics.html', context)
 
+
+def map_view(requests,parish=None):
+    context = {
+
+    }
+
+    if parish is not None:
+        print(1)
+
+    return render(requests, 'sms/map/jamaica.html', context)
 
 # class CustomLoginView(LoginView):
 # 	template_name = 'sms/login.html'
