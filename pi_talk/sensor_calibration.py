@@ -79,6 +79,28 @@ def plot_box_plot(data, measurements, soil_types):
     plt.show()
 
 
+def plot_log_graph(data, measurements, soil_types, regression_results):
+    for measurement in measurements:
+        plt.figure(figsize=(10, 6))
+        for soil_type in soil_types:
+            key = f'{measurement}_{soil_type}'
+            x_values = np.arange(len(data[key]))
+            plt.scatter(x_values, data[key], label=f'{measurement}_{soil_type}')
+
+            # Calculate regression line on log scale
+            log_values = np.log(data[key])
+            slope, intercept, _, _, _ = linregress(x_values, log_values)
+            regression_line = intercept + slope * x_values
+            plt.plot(x_values, np.exp(regression_line), color='red', linestyle='--')
+
+        plt.yscale('log')  # Set y-axis to log scale
+        plt.xlabel('Data Points')
+        plt.ylabel('Log(Sensor Readings)')
+        plt.title(f'Log-scaled Scatter Plot with Regression Line ({measurement})')
+        plt.legend()
+        plt.show()
+
+
 def linear_regression(data, measurements, soil_types):
     regression_results = {}
 
@@ -141,7 +163,8 @@ if __name__ == '__main__':
     regression_results = linear_regression(soil_data_dict, measurements, soil_types)
     print('\nLinear Regression Results:')
     for key, value in regression_results.items():
-        print(f'{key}: Slope={value["slope"]:.4f}, Intercept={value["intercept"]:.4f}, R-squared={value["r_value"]:.4f}, P-value={value["p_value"]:.4f}')
+        print(
+            f'{key}: Slope={value["slope"]:.4f}, Intercept={value["intercept"]:.4f}, R-squared={value["r_value"]:.4f}, P-value={value["p_value"]:.4f}')
     plot_anova_results(f_statistic, p_value)
     plot_box_plot(soil_data_dict, measurements, soil_types)
     plot_coefficient_of_variation(cv_results)

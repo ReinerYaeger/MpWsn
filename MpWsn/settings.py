@@ -35,17 +35,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #'django.contrib.gis',
+    'django.contrib.gis',
 
     'sms',
     'pi_talk',
     'profiles',
 
     'channels',
-    #'djgeojson',
-    #'leaflet',
+    'djgeojson',
+    'leaflet',
 
 ]
+
+GDAL_LIBRARY_PATH = r'C:\OSGeo4W\bin\gdal308.dll'
+GEOS_LIBRARY_PATH = r'C:\OSGeo4W\bin\geos_c.dll'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -79,28 +82,52 @@ WSGI_APPLICATION = 'MpWsn.wsgi.application'
 
 ASGI_APPLICATION = 'MpWsn.asgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mp_wsn',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',
-    },
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'mp_wsn',
+    #     'USER': 'root',
+    #     'PASSWORD': '',
+    #     'HOST': '127.0.0.1',
+    # },
 
-    'gis': {
+    'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'gisdb',
-        'USER': 'admin',
+        'USER': 'django',
         'PASSWORD': 'root',
         'HOST': 'localhost',
 
     }
 }
+
+LEAFLET_CONFIG = {
+    'DEFAULT_CENTER': (18.1096, -77.2975),
+    'MINIMAP': True,
+    'RESET_VIEW': True,
+    'SPATIAL_EXTENT': (-78.3666, 17.7012, -76.199, 18.5242),
+    'DEFAULT_ZOOM': 10,
+    'MAX_ZOOM': 18,
+    'MIN_ZOOM': 10,
+    'SCALE': 'both',
+    'ATTRIBUTION_PREFIX': 'Powered by EBISYS',
+    'TILES': [('Terrain Map',
+               'http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                   'attribution': 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+                   'maxZoom': 50})]
+
+}
+
+LEAFLET_WIDGET_ATTRS = {
+    'map_height': '500px',
+    'map_width': '100%',
+    'display_raw': 'true',
+    'map_srid': 4326,
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

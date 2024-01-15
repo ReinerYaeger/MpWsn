@@ -1,49 +1,168 @@
 {% load static %}
-{#{% load geojson_tags %}#}
-{#{% load leaflet_tags %}#}
+{% load geojson_tags %}
+{% load leaflet_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-{% comment %}    {% leaflet_js %}
-    {% leaflet_css %}e{% endcomment %}
+    {% leaflet_js %}
+    {% leaflet_css %}
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Map</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-          crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-            crossorigin=""></script>
+    <link rel="stylesheet" href="{% static 'css/map/map.css' %}">
 
-    <!-- Load Esri Leaflet from CDN -->
-    <script src="https://unpkg.com/esri-leaflet@2.5.0/dist/esri-leaflet.js"
-            integrity="sha512-ucw7Grpc+iEQZa711gcjgMBnmd9qju1CICsRaryvX7HJklK0pGl/prxKvtHwpgm5ZHdvAil7YPxI1oWPOWK3UQ=="
-            crossorigin=""></script>
+    <script type="text/javascript">
+        let url = `ws://${window.location.host}/ws/socket-server/`
+        const dataSocket = new WebSocket(url)
 
-    <!-- Load Esri Leaflet Geocoder from CDN -->
-    <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.css"
-          integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
-          crossorigin="">
-    <script src="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.js"
-            integrity="sha512-HrFUyCEtIpxZloTgEKKMq4RFYhxjJkCiF5sDxuAokklOeZ68U2NPfh4MFtyIVWlsKtVbK5GD2/JzFyAfvT5ejA=="
-            crossorigin=""></script>
+        dataSocket.onmessage = function (e) {
+            let data = JSON.parse(e.data);
+            // Handle incoming data as needed
+        }
+    </script>
 
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <!-- Include Leaflet Sidebar library -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-sidebar-v2@0.2.0/dist/leaflet-sidebar.min.css"/>
+    <script src="https://unpkg.com/leaflet-sidebar-v2@0.2.0/dist/leaflet-sidebar.min.js"></script>
+    <script src="{% static 'js/map/heatmap.js' %}"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"/>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+    <!-- Include Leaflet Button library -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-button@0.2.0/dist/leaflet.button.css"/>
+    <script src="https://unpkg.com/leaflet-button@0.2.0/dist/leaflet.button.js"></script>
+
+    {% include 'sms/navigation/header_navigation_bar.html' %}
+    {% include 'sms/navigation/sidebar.html' %}
+    <script>
+        function init() {
+            function main_map_init(map, options) {
+
+                // Apply Leaflet configuration settings
+                map.setView([18.1096, -77.2975], 10);  // DEFAULT_CENTER and DEFAULT_ZOOM
+
+                // Set SPATIAL_EXTENT to restrict panning outside the Jamaica region
+                var spatialExtent = L.latLngBounds([17.7012, -78.3666], [18.5242, -76.199]);
+
+
+                map.setMaxBounds(spatialExtent);
+                {#map.minZoom(14)#}
+
+                // Add tile layer with attribution
+                L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+                }).addTo(map);
+
+
+                var geocoder = L.Control.geocoder({
+                    defaultMarkGeocode: false
+                })
+                    .on('markgeocode', function (e) {
+                        var bbox = e.geocode.bbox;
+                        var poly = L.polygon([
+                            bbox.getSouthEast(),
+                            bbox.getNorthEast(),
+                            bbox.getNorthWest(),
+                            bbox.getSouthWest()
+                        ]).addTo(map);
+                        map.fitBounds(poly.getBounds());
+                    })
+                    .addTo(map);
+
+                // Fetch GeoJSON data and add to the map
+                var dataurl = '{% url "sensor_dataset" %}';
+                $.getJSON(dataurl, function (data) {
+
+                    var heatLayer = L.geoJson(data, {
+                        pointToLayer: function (feature, latlng) {
+                            var heat = L.heatLayer(latlng, {radius: 2000})
+
+                        }
+                    }).addTo(map);
+                    // Create a GeoJSON layer with markers
+                    var markersLayer = L.geoJSON(data, {
+                        pointToLayer: function (feature, latlng) {
+                            var sensor_data = feature.properties.sensor_data;
+                            var marker = new L.Marker(latlng)
+                                .bindPopup('<h5><b> Sensor Group: <br>' + feature.properties.sensor_group_name + '</b></h5>' +
+                                    '<br><p>Average Moisture Level: ' + sensor_data + '</p>');
+                            return marker;
+                        },
+                        onEachFeature: function (feature, layer) {
+                            // Add a hover function to display data when hovered
+                            layer.on('mouseover', function (e) {
+                                layer.openPopup();
+                            });
+                            layer.on('mouseout', function (e) {
+                                layer.closePopup();
+                            });
+                        }
+                    }).addTo(map);
+
+                    // Create a GeoJSON layer with circles
+                    var circlesLayer = L.geoJSON(data, {
+                        pointToLayer: function (feature, latlng) {
+                            var sensor_data = feature.properties.sensor_data;
+                            var circle = new L.circle(latlng, {radius: 900})
+                                .bindPopup('<h5><b> Sensor Group: <br>' + feature.properties.sensor_group_name + '</b></h5>' +
+                                    '<br><p>Average Moisture Level: ' + sensor_data + '</p>');
+
+                            circle.on('click', function (e) {
+                                openModal(feature.properties.sensor_group_name, sensor_data);
+                            })
+                            return circle;
+                        },
+                        onEachFeature: function (feature, layer) {
+                            // Add a hover function to display data when hovered
+                            layer.on('mouseover', function (e) {
+                                layer.openPopup();
+                            });
+                            layer.on('mouseout', function (e) {
+                                layer.closePopup();
+                            });
+                        }
+                    }).addTo(map);
+                });
+
+                // Add minimap if specified
+                if (options.minimap) {
+                    var minimap = new L.Control.MiniMap(
+                        L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+                            maxZoom: 14,
+
+                        }), {
+                            toggleDisplay: true,
+                            minimized: false
+                        }
+                    ).addTo(map);
+                }
+
+                var sidebar = L.control.sidebar('sidebar', {
+                    position: 'left'
+                });
+
+                map.addControl(sidebar);
+            }
+
+            // Initialize the Leaflet map
+            var mainMap = L.map('main_map');
+
+            // Call the initialization function
+            main_map_init(mainMap, {
+                minimap: true,
+                resetView: true
+            });
+        }
+    </script>
 </head>
-<body>
-{% include 'sms/navigation/sidebar.html' %}
-
-<div id="map"></div>
-<script
-        src="{% static 'js/map.js' %}"
-        defer>
-
-</script>
-
-
-<h1>hone</h1>
+<body onload="init()">
+<div class="overlay"></div>
+<div id="main_map" style="height: 900px;"></div>
 
 </body>
 </html>

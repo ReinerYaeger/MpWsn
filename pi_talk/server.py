@@ -9,6 +9,13 @@ logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', filename
 logger = logging.getLogger(__name__)
 
 
+# INSERT INTO location_soil_sensor_data (sensor_group_name, sensor_name, sensor_data, sensor_date_time, creation_date, parish, geo_location)
+# VALUES
+# ('University of Technology Jamaica', 'A0', 20.5, '2024-01-14 00:30:00', '2024-01-14 00:00:00', 'Kingston', ST_GeomFromText('POINT(-76.7440833 18.0182222)')),
+# ('University of Technology Jamaica', 'A1', 18.2, '2024-01-14 15:00:00', '2024-01-14 00:00:00', 'Kingston', ST_GeomFromText('POINT(-76.7440833 18.0182222)')),
+# ('University of Technology Jamaica', 'A2', 45.0, '2024-01-14 00:45:00', '2024-01-14 00:00:00', 'Kingston', ST_GeomFromText('POINT(-76.7440833 18.0182222)'));
+
+
 try:
     connection = connect(
         host="localhost",

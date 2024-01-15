@@ -1,19 +1,22 @@
-from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404
 
-from pi_server import start_server
-from  threading import Thread
+from profiles.models import UserProfile
 
-server_running = bool
+def administrator(request):
+    # if the user is authenticated if not send them to a log in page
 
-# Create your views here.
-if not server_running:
-    thread = Thread(target=start_server())
-    thread.start()
-    server_running = True
+    return render(request, 'pi_talk/index.html', )
 
 
-def index(requests):
+def index(request):
+
     context = {
+        'title': "Login",
 
     }
-    return render(requests, 'sms/login.html', context)
+    if request.user.is_authenticated:
+        context['title'] = "Pi Talk"
+
+
+    return render(request, 'pi_talk/index.html',context)

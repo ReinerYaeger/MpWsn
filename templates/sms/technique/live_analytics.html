@@ -16,9 +16,7 @@
             const url = `ws://${window.location.host}/ws/socket-server/`;
             const dataSocket = new WebSocket(url);
 
-
-
-            var avg_chart_config = {
+            const avg_chart_config = {
                 type: 'line',
 
                 data: {
@@ -46,7 +44,7 @@
                                 beginAtZero: true
                             }
                         }]
-                    }
+                    },
                 }
             }
 
@@ -149,15 +147,16 @@
             const ctxTwo = document.getElementById('A1_chart').getContext('2d');
             const ctxThree = document.getElementById('A2_chart').getContext('2d');
             const ctx = document.getElementById('acquisitions').getContext('2d');
-            var avgChart = new Chart(ctx, avg_chart_config)
-            var a0Chart = new Chart(ctxOne,a0_config)
-            var a1Chart = new Chart(ctxTwo,a1_config)
-            var a2Chart = new Chart(ctxThree,a2_config)
-           //var a0Chart = new Chart(ctxTwo,)
+            const avgChart = new Chart(ctx, avg_chart_config);
+            const a0Chart = new Chart(ctxOne, a0_config);
+            const a1Chart = new Chart(ctxTwo, a1_config);
+            const a2Chart = new Chart(ctxThree, a2_config);
+            //var a0Chart = new Chart(ctxTwo,)
             //var a0Chart = new Chart(ctxThree,)
 
             dataSocket.addEventListener('message', function (e) {
                 const graphData = JSON.parse(e.data);
+                console.log(graphData);
                 a0Chart.data.labels.push(graphData.label)
                 a1Chart.data.labels.push(graphData.label)
                 a2Chart.data.labels.push(graphData.label)
@@ -182,14 +181,14 @@
 </head>
 <body>
 <header>
+    {% include 'sms/navigation/header_navigation_bar.html' %}
     {% include 'sms/navigation/sidebar.html' %}
 </header>
 <div class="container">
     <main>
         <section>
-            <h2>Overall Average Reading</h2>
-
-            <div style="width: 1500px;">
+            <div style="margin:100px;width: 1500px;">
+                <h2>Overall Average Reading</h2>
                 <canvas width="900" height="400" aria-label="Chart" role="img" id="acquisitions"></canvas>
             </div>
         </section>
@@ -197,7 +196,7 @@
         <section>
             <h2>St Thomas Soil Moisture Live</h2>
 
-            <div style="width: 1500px;">
+            <div style="margin:100px;width: 1500px;">
                 <canvas width="900" height="400" aria-label="Chart" role="img" id="A0_chart"></canvas>
             </div>
         </section>
@@ -205,14 +204,14 @@
         <section>
             <h2>St Mary Soil Moisture Live</h2>
 
-            <div style="width: 1500px;">
+            <div style="margin:100px;width: 1500px;">
                 <canvas width="900" height="400" aria-label="Chart" role="img" id="A1_chart"></canvas>
             </div>
         </section>
         <section>
             <h2>Portland Soil Moisture Live</h2>
 
-            <div style="width: 1500px;">
+            <div style="margin:100px;width: 1500px;">
                 <canvas width="900" height="400" aria-label="Chart" role="img" id="A2_chart"></canvas>
             </div>
         </section>

@@ -1,0 +1,121 @@
+.leaflet-container { /* all maps */
+    width: 100%;
+    padding-left: 300px;
+    /* height: calc(100vh - 60px); */
+    height: 100vh;
+}
+
+.legend, .temporal-legend {
+    padding: 6px 10px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: rgba(0, 0, 0, 0.85);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    color: whitesmoke;
+}
+
+#legendTitle {
+    text-align: center;
+    margin-bottom: 15px;
+    color: whitesmoke;
+    /* font-variant: small-caps; */
+    font-weight: bold;
+}
+
+.leaflet-control-layers {
+    float: right;
+    top: 500px;
+    right: 0;
+    /* margin-left:-200px; */
+    position: absolute;
+    background: rgba(0, 0, 0, 0.85);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    color: whitesmoke;
+}
+
+.search-input {
+    font-family: Courier
+}
+
+.search-input,
+.leaflet-control-search {
+    max-width: 400px;
+}
+
+.info #horBarChart {
+    width: 100% !important;
+    max-width: 800px;
+    /* height:inherit; */
+}
+
+.modal{
+	opacity : 0;
+
+	position: fixed;
+	top: 0px; left: 0;
+	width: 100%; height: 100%;
+
+	max-width : 100%;
+	max-height : 100%;
+
+	display: flex;
+	justify-content: center;
+	align-items : center;
+
+	transition : opacity 0.5s;
+}
+.modal,.opaque{
+	opacity : 1;
+	transition : opacity 0.5s;
+}
+.modal{
+	top:-100px;
+	height : 0;
+}
+
+.modal-overlay{
+	position : absolute;
+
+	width : 100%;
+	height : 100%;
+	background-color : RGBA(0, 0, 0, 0.6);
+}
+
+.modal-contents{
+	display:flex;
+	flex-direction : column;
+	align-items : center;
+	position: relative;
+
+	padding: 50px 100px;
+	width: auto;
+	max-width : 80%;
+	max-height : 80%;
+
+	text-align: center;
+	background-color: rgb(255,255,255);
+	border-radius: 6px;
+}
+
+.modal-text{
+	text-align:left;
+	overflow: auto;
+}
+
+.modal-close{
+	margin-top : 20px;
+	padding : 5px 20px;
+
+	color : #FFFFFF;
+	font-weight : bolder;
+	font-size : 30px;
+	background-color : #ffaa00;
+	border-radius : 7px;
+	cursor : pointer;
+
+	transition : all 0.5s;
+}
+.modal-close:hover{
+	background-color : #ffd500;
+}
