@@ -40,8 +40,7 @@ def analyse_experiment_csv_results():
 
 
 def one_way_anova(data, measurements, soil_types):
-    f_statistic, p_value = f_oneway(
-        *[data[measurement + '_' + soil_type] for measurement in measurements for soil_type in soil_types])
+    f_statistic, p_value = f_oneway(*[data[measurement + '_' + soil_type] for measurement in measurements for soil_type in soil_types])
 
     print(f'One-way ANOVA Results:')
     print(f'F-statistic: {f_statistic}')

@@ -16,51 +16,18 @@
             const url = `ws://${window.location.host}/ws/socket-server/`;
             const dataSocket = new WebSocket(url);
 
-            const avg_chart_config = {
+            // Chart configuration
+            const avgChartConfig = {
                 type: 'line',
-
                 data: {
-                    //labels: ["Label1", "Label2"],
-                    labels: ["Date"],
+                    labels: [],  // Array to store date-time labels
                     datasets: [{
-                        data: [],
+                        data: [],  // Array to store average data for A0
                         label: "Average Data",
                         backgroundColor: "#3e95cd",
                         tension: 0,
-
-                    },]
-                },
-                options: {
-                    legend: {
-                        display: true,
-                        position: "bottom",
-                        labels: {
-                            fontColor: 'rgb(0, 0, 0)'
-                        }
-                    },
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    },
-                }
-            }
-
-            const a0_config = {
-                type: 'line',
-
-                data: {
-                    //labels: ["Label1", "Label2"],
-                    labels: ["Date"],
-                    datasets: [{
-                        data: [],
-                        label: "St Thomas",
-                        backgroundColor: "#3e95ed",
-                        tension: 0,
-
-                    },]
+                        fill: true,
+                    }]
                 },
                 options: {
                     legend: {
@@ -80,104 +47,34 @@
                 }
             };
 
-            const a1_config = {
-                type: 'line',
-
-                data: {
-                    //labels: ["Label1", "Label2"],
-                    labels: ["Date"],
-                    datasets: [{
-                        data: [],
-                        label: "St Mary",
-                        backgroundColor: "#3e95ed",
-                        tension: 0,
-
-                    },]
-                },
-                options: {
-                    legend: {
-                        display: true,
-                        position: "bottom",
-                        labels: {
-                            fontColor: 'rgb(0, 0, 0)'
-                        }
-                    },
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    }
-                }
-            };
-
-            const a2_config = {
-                type: 'line',
-
-                data: {
-                    //labels: ["Label1", "Label2"],
-                    labels: ["Date"],
-                    datasets: [{
-                        data: [],
-                        label: "Portland",
-                        backgroundColor: "#3e95ed",
-                        tension: 0,
-
-                    },]
-                },
-                options: {
-                    legend: {
-                        display: true,
-                        position: "bottom",
-                        labels: {
-                            fontColor: 'rgb(0, 0, 0)'
-                        }
-                    },
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    }
-                }
-            };
-            const ctxOne = document.getElementById('A0_chart').getContext('2d');
-            const ctxTwo = document.getElementById('A1_chart').getContext('2d');
-            const ctxThree = document.getElementById('A2_chart').getContext('2d');
+            // Initialize the chart
             const ctx = document.getElementById('acquisitions').getContext('2d');
-            const avgChart = new Chart(ctx, avg_chart_config);
-            const a0Chart = new Chart(ctxOne, a0_config);
-            const a1Chart = new Chart(ctxTwo, a1_config);
-            const a2Chart = new Chart(ctxThree, a2_config);
-            //var a0Chart = new Chart(ctxTwo,)
-            //var a0Chart = new Chart(ctxThree,)
+            const avgChart = new Chart(ctx, avgChartConfig);
 
+            // WebSocket event listener
             dataSocket.addEventListener('message', function (e) {
                 const graphData = JSON.parse(e.data);
                 console.log(graphData);
-                a0Chart.data.labels.push(graphData.label)
-                a1Chart.data.labels.push(graphData.label)
-                a2Chart.data.labels.push(graphData.label)
-                avgChart.data.labels.push(graphData.label);
 
-                avgChart.data.datasets[0].data.push(graphData['AA']);
-                a0Chart.data.datasets[0].data.push(graphData['A0']);
-                a1Chart.data.datasets[0].data.push(graphData['A1']);
-                a2Chart.data.datasets[0].data.push(graphData['A2']);
+                // Update labels and data arrays
+                avgChart.data.labels.push(graphData.label);
+                avgChart.data.datasets[0].data.push(graphData.avg_sensor_data);
+
+
+                // Maintain a maximum number of data points
                 const maxDataPoints = 100;
                 if (avgChart.data.labels.length > maxDataPoints) {
                     avgChart.data.labels.shift();
                     avgChart.data.datasets[0].data.shift();
+                    avgChart.data.datasets[1].data.shift();
+                    avgChart.data.datasets[2].data.shift();
                 }
+
                 avgChart.update();
-                a0Chart.update();
-                a1Chart.update();
-                a2Chart.update();
             });
         });
     </script>
+
 </head>
 <body>
 <header>
@@ -185,47 +82,28 @@
     {% include 'sms/navigation/sidebar.html' %}
 </header>
 <div class="container">
-    <main>
-        <section>
-            <div style="margin:100px;width: 1500px;">
-                <h2>Overall Average Reading</h2>
-                <canvas width="900" height="400" aria-label="Chart" role="img" id="acquisitions"></canvas>
-            </div>
-        </section>
 
-        <section>
-            <h2>St Thomas Soil Moisture Live</h2>
+    <section>
+        <div style="margin:100px;width: 1500px;">
+            <h2>Overall Average Reading Across All Regions</h2>
+            <canvas width="900" height="400" aria-label="Chart" role="img" id="acquisitions"></canvas>
+        </div>
+    </section>
 
-            <div style="margin:100px;width: 1500px;">
-                <canvas width="900" height="400" aria-label="Chart" role="img" id="A0_chart"></canvas>
-            </div>
-        </section>
+    <section>
+        <form id="chartForm">
+            {% csrf_token %}
+            <label>Start Date</label>
+            <input type="date">
+            <label>End Date</label>
+            <input type="date">
+            <button type="submit">Submit</button>
+        </form>
 
-        <section>
-            <h2>St Mary Soil Moisture Live</h2>
-
-            <div style="margin:100px;width: 1500px;">
-                <canvas width="900" height="400" aria-label="Chart" role="img" id="A1_chart"></canvas>
-            </div>
-        </section>
-        <section>
-            <h2>Portland Soil Moisture Live</h2>
-
-            <div style="margin:100px;width: 1500px;">
-                <canvas width="900" height="400" aria-label="Chart" role="img" id="A2_chart"></canvas>
-            </div>
-        </section>
+    </section>
 
 
-        <br>
-
-        <section>
-            <h2>Live Data Analysis2</h2>
-
-            <p>Explore the live data analysis presented in the interactive chart above.</p>
-            <p>Data is updated every 5 seconds to provide real-time insights.</p>
-        </section>
-    </main>
 </div>
 </body>
 </html>
+

@@ -1,14 +1,14 @@
+import logging
+import threading
+
 from django.contrib.auth.decorators import login_required
 from django.core.serializers import serialize
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
-from profiles.models import UserProfile
-from .models import LocationSoilSensorData
-
-
-# from sms.forms import SignupForm
-# from django.contrib.gis.geos import Point
+from .models import SensorCollectedData, SensorGroup, SensorGroupManager
+from django.views.decorators.csrf import csrf_exempt
+from .forms import ChartDataForm
 
 
 def index(requests):
@@ -16,14 +16,14 @@ def index(requests):
         'title': "Home",
 
     }
-    return render(requests, 'sms/index.html',context)
+    return render(requests, 'sms/index.html', context)
 
 
 def experiment(requests):
     context = {
 
     }
-    return render(requests, 'sms/experiment.html',context)
+    return render(requests, 'sms/experiment.html', context)
 
 
 def live_analytics(requests):
@@ -43,7 +43,7 @@ def experiment_results(requests):
 
 
 def sensor_dataset(requests):
-    dataset = serialize('geojson', LocationSoilSensorData.objects.all())
+    dataset = serialize('geojson', SensorGroup.objects.all())
 
     return HttpResponse(dataset, content_type='json')
 
@@ -51,7 +51,7 @@ def sensor_dataset(requests):
 def map_view(requests, parish=None):
     context = {
         'title': "Map of Jamaica Live Analysis",
-        "sensor_data": serialize('geojson', LocationSoilSensorData.objects.all()),
+        "sensor_data": serialize('geojson', SensorCollectedData.objects.all()),
         'settings_overrides': {
             'DEFAULT_CENTER': (17.9279, -76.7162),
             'SPATIAL_EXTENT': (-76.4016, 17.8564, -76.2925, 17.9926),
@@ -66,6 +66,16 @@ def map_view(requests, parish=None):
 
     return render(requests, 'sms/map/jamaica.html', context)
 
-def administrator(request):
 
-    return render(request, 'pi_talk/index.html', {'user_profile': user_profiles})
+def administrator(request):
+    return render(request, 'pi_talk/index.html', )
+
+
+@login_required(login_url=index)
+def data_manager(request):
+    return render(request, 'sms/data_handler.html')
+
+
+def chart_data(request):
+
+    return render(request, 'your_template.html', )
