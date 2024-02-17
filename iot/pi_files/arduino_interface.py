@@ -15,7 +15,7 @@ logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', filename
 logger = logging.getLogger(__name__)
 
 
-def get_serial_data(sleep_sec=10):
+def get_serial_data(sleep_sec=0):
     try:
         ser = serial.Serial('COM7', 9600, timeout=1)
         ser.flushInput()
@@ -43,12 +43,7 @@ def get_serial_data(sleep_sec=10):
                             if data_value:
                                 analog_dict[prefix[:-1]] = data_dict
 
-            t = threading.Thread(target=process_data, args=analog_dict)
-            if t.is_alive():
-                pass
-            else:
-                t.start()
-            #process_data(analog_dict)
+            process_data(analog_dict)
             print(analog_dict)
             logging.info(analog_dict)
 
@@ -127,7 +122,7 @@ def process_data(analog_dict):
 
 
 def send_data(data):
-    host = "127.0.0.1"
+    host = "192.168.0.5"
     port = 1234
 
     try:
@@ -141,7 +136,7 @@ def send_data(data):
 
 async def send_data_async(data):
     reader, writer = await asyncio.open_connection(
-        '127.0.0.1', 1234)
+        '192.168.0.5', 1234)
 
     writer.write(data)
     await writer.drain()

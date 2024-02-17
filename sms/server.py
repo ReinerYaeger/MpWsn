@@ -42,7 +42,7 @@ async def data_handler(reader, writer):
 
 async def server_async():
     server = await asyncio.start_server(
-        data_handler, '127.0.0.1', 1234)
+        data_handler, '0.0.0.0', 1234)
 
     addr = ', '.join(str(sock.getsockname()) for sock in server.sockets)
     print(f'Serving on {addr}')
@@ -52,7 +52,7 @@ async def server_async():
 
 
 def server():
-    HOST = '192.168.0.5'  # Listen on all available interfaces
+    HOST = '0.0.0.0'  # Listen on all available interfaces
     PORT = 1234
     # connection = define_connection()
 
