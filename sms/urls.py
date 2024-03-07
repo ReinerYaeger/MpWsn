@@ -1,12 +1,12 @@
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path, include
-from .views import index, experiment, live_analytics, experiment_results, map_view, sensor_dataset, administrator, \
+from .views import index, experiment, live_analytics, environmental_statistics, map_view, sensor_dataset, administrator, \
     report
 
 urlpatterns = [
     path('', index, name='index'),
     path('live_analytics/', live_analytics, name='live_analytics'),
-    path('experiment_results/', experiment_results, name='experiment_results'),
+    path('environmental_statistics/', environmental_statistics, name='environmental_statistics'),
     path('experiment/', experiment, name='experiment'),
     path('administrator/',administrator,name="administrator" ),
     path('map_view', map_view, name="map_view"),

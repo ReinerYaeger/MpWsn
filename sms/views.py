@@ -1,5 +1,6 @@
 import logging
 import threading
+import sms.weather_api_coms
 
 from django.contrib.auth.decorators import login_required
 from django.core.serializers import serialize
@@ -34,12 +35,13 @@ def live_analytics(requests):
     return render(requests, 'sms/technique/live_analytics.html', context)
 
 
-def experiment_results(requests):
+def environmental_statistics(requests):
     context = {
-        'title': "Results",
-
+        'title': "Environmental Statistics",
     }
-    return render(requests, 'sms/technique/live_analytics.html', context)
+
+
+    return render(requests, 'sms/environmental_statistics.html', context)
 
 
 def sensor_dataset(requests):
