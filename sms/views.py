@@ -68,7 +68,19 @@ def map_view(requests, parish=None):
 
 
 def administrator(request):
-    return render(request, 'pi_talk/index.html', )
+    context = {
+        'title': "Admin Panel"
+    }
+    if request.method == "POST":
+        if 'login' in request.POST:
+            email = request.POST['email']
+            password = request.POST['password']
+
+        if 'register' in request.POST:
+            email = request.POST['email']
+            password = request.POST['password']
+
+    return render(request, 'sms/admin.html', context)
 
 
 @login_required(login_url=index)
@@ -76,6 +88,10 @@ def data_manager(request):
     return render(request, 'sms/data_handler.html')
 
 
-def chart_data(request):
+@login_required(login_url=index)
+def report(request):
+    return render(request, 'sms/reports/generated_report.html')
 
+
+def chart_data(request):
     return render(request, 'your_template.html', )

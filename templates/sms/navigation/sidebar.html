@@ -31,17 +31,13 @@
         <li>
             <div class="iocn-link">
                 <a href="{% url 'experiment' %}">
-                    <i class='bx bx-plug'></i>
-                    <span class="link_name">Experiment Methods</span>
+                    <i class='bx bx-stats'></i>
+                    <span class="link_name">Environmental Statistics</span>
                 </a>
                 <i class='bx bxs-chevron-down arrow'></i>
             </div>
             <ul class="sub-menu">
-                <li><a class="link_name" href="#">Experiment Methods</a></li>
-                <br>
-                <li><a href="{% url 'experiment' %}/#sensors">Sensors</a></li>
-                <li><a href="{% url 'experiment' %}/#iot">Iot Set up</a></li>
-                <li><a href="{% url 'experiment' %}/#exp_images">Experiment Images</a></li>
+                <li><a class="link_name" href="#">Environmental Statistics</a></li>
             </ul>
         </li>
         <br>
@@ -56,12 +52,12 @@
         </li>
         <br>
         <li>
-            <a href="">
-                <i class='bx bx-line-chart'></i>
-                <span class="link_name">Experiment Results</span>
+            <a href="{% url 'report' %}">
+                <i class='bx bxs-report' ></i>
+                <span class="link_name">Reports</span>
             </a>
             <ul class="sub-menu blank">
-                <li><a class="link_name" href="#">Experiment Results</a></li>
+                <li><a class="link_name" href="{% url 'report' %}">Reports</a></li>
             </ul>
         </li>
         <br>
@@ -71,7 +67,7 @@
                 <span class="link_name">Admin</span>
             </a>
             <ul class="sub-menu blank">
-                <li><a class="link_name" href="#">Admin</a></li>
+                <li><a class="link_name" href="{% url 'administrator' %}">Admin</a></li>
             </ul>
         </li>
 

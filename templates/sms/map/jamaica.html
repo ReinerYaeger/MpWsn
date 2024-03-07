@@ -17,7 +17,6 @@
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet-sidebar-v2@0.2.0/dist/leaflet-sidebar.min.css"/>
     <script src="https://unpkg.com/leaflet-sidebar-v2@0.2.0/dist/leaflet-sidebar.min.js"></script>
-    <script src="{% static 'js/map/heatmap.js' %}"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"/>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
@@ -51,32 +50,25 @@
 
                 var geocoder = L.Control.geocoder({
                     defaultMarkGeocode: false
-                }) .on('markgeocode', function (e) {
-                        var bbox = e.geocode.bbox;
-                        var poly = L.polygon([
-                            bbox.getSouthEast(),
-                            bbox.getNorthEast(),
-                            bbox.getNorthWest(),
-                            bbox.getSouthWest()
-                        ]).addTo(map);
+                }).on('markgeocode', function (e) {
+                    var bbox = e.geocode.bbox;
+                    var poly = L.polygon([
+                        bbox.getSouthEast(),
+                        bbox.getNorthEast(),
+                        bbox.getNorthWest(),
+                        bbox.getSouthWest()
+                    ]).addTo(map);
 
-                        poly.on('click', function () {
-                            map.removeLayer(poly);
-                        });
+                    poly.on('click', function () {
+                        map.removeLayer(poly);
+                    });
 
-                        map.fitBounds(poly.getBounds());
-                    })
+                    map.fitBounds(poly.getBounds());
+                })
                     .addTo(map);
 
                 var dataurl = '{% url "sensor_dataset" %}';
                 $.getJSON(dataurl, function (data) {
-
-                    var heatLayer = L.geoJson(data, {
-                        pointToLayer: function (feature, latlng) {
-                            var heat = L.heatLayer(latlng, {radius: 2000})
-
-                        }
-                    }).addTo(map);
                     let url = `ws://${window.location.host}/ws/map-data-socket/`
                     const dataSocket = new WebSocket(url)
 
@@ -87,9 +79,14 @@
                             pointToLayer: function (feature, latlng) {
                                 var avg_sensor_data = webSocketData['avg_sensor_data'];
                                 var sensor_group_name = webSocketData['sensor_group_name'];
+                                var state = "Saturated";
+                                if (avg_sensor_data < .4){
+                                    state = "Dry";
+                                }
                                 var marker = new L.Marker(latlng)
-                                    .bindPopup('<h5><b> Sensor Group: <br>' + sensor_group_name + '</b></h5>' +
-                                        '<br><p>Average Moisture Level: ' + avg_sensor_data.toFixed(3) + '</p>');
+                                     .bindPopup('<h5><b> Sensor Group: ' + sensor_group_name + '</b></h5>' +
+                                        '<p>Average Moisture Level: ' + avg_sensor_data.toFixed(3)+'</p>'+
+                                        '<p> Soil condition: ' +  state );
                                 return marker;
                             },
                             onEachFeature: function (feature, layer) {
@@ -106,9 +103,14 @@
                             pointToLayer: function (feature, latlng) {
                                 var avg_sensor_data = webSocketData['avg_sensor_data'];
                                 var sensor_group_name = webSocketData['sensor_group_name'];
+                                var state = "Saturated";
+                                if (avg_sensor_data < .4){
+                                    state = "Dry";
+                                }
                                 var circle = new L.Circle(latlng, {radius: 900})
-                                    .bindPopup('<h5><b> Sensor Group: <br>' + sensor_group_name + '</b></h5>' +
-                                        '<br><p>Average Moisture Level: ' + avg_sensor_data.toFixed(3) + '</p>');
+                                    .bindPopup('<h5><b> Sensor Group: ' + sensor_group_name + '</b></h5>' +
+                                        '<p>Average Moisture Level: ' + avg_sensor_data.toFixed(3)+'</p>'+
+                                        '<p> Soil condition: ' +  state );
 
                                 circle.on('click', function (e) {
                                     openModal(feature.properties.sensor_group_name, sensor_data);
@@ -128,8 +130,6 @@
                     }
 
                 });
-
-
                 var sidebar = L.control.sidebar('sidebar', {
                     position: 'left'
                 });

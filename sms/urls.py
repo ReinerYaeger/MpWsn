@@ -1,7 +1,7 @@
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path, include
-from .views import index, experiment, live_analytics, experiment_results, map_view, sensor_dataset,administrator
-from pi_talk.urls import  administrator
+from .views import index, experiment, live_analytics, experiment_results, map_view, sensor_dataset, administrator, \
+    report
 
 urlpatterns = [
     path('', index, name='index'),
@@ -12,6 +12,7 @@ urlpatterns = [
     path('map_view', map_view, name="map_view"),
     path('map_view/<str:parish>', map_view, name="map_view"),
     path('sensor_dataset/', sensor_dataset, name='sensor_dataset'),
+    path('report/', report, name='report'),
 
     # path('soil_moisture_data/', continuous_data_retrieval_api, name='continuous_retrieval'),
     # path('get_updated_data/', get_updated_data, name='get_updated_data'),

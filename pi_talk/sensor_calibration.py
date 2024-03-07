@@ -134,6 +134,7 @@ def plot_anova_results(f_statistic, p_value):
     plt.bar(['P-value'], [p_value], color='orange')
     plt.ylabel('Values')
     plt.title('ANOVA Results')
+
     plt.show()
 
 

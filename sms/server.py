@@ -52,16 +52,13 @@ async def server_async():
 
 
 def server():
-    HOST = '0.0.0.0'  # Listen on all available interfaces
+    HOST = '0.0.0.0'
     PORT = 1234
-    # connection = define_connection()
 
     try:
-
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.bind((HOST, PORT))
             s.listen()
-
             logging.debug(f"Server listening on port {PORT}...")
 
             while True:
